@@ -23,6 +23,10 @@ YTP++ is the name given to the second iteration of the software, however there w
 
 ## How do I configure YTP++?
 All configuration settings may be found in the application itself, either on the interface or in the Tools menu. [ImageMagick](https://imagemagick.org/) is required for the Squidward effect but is otherwise not needed.
+A 32-bit version of [VLC](https://www.videolan.org/vlc/) is required to run this software, please install it before trying to run.
+
+## I installed VLC, but it's still giving me an error?
+Make sure it is the **32-bit** version of VLC as the 64-bit one **WILL NOT** work.
 
 ## I installed ImageMagick, but Squidward is still disabled?
 Try adding magick.exe to your system path. If you've checked the box needed in the installation prompt for ImageMagick, try restarting your computer. If all else fails, try setting magick.exe manually via the Tools menu.
