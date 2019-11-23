@@ -88,13 +88,7 @@ namespace YTPPlus
                 startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
-                // Read stderr synchronously (on another thread)
-
-                string errorText = null;
                 string s = "";
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
-                stderrThread.Start();
-
                 // Read stdout synchronously (on this thread)
 
                 while (true)
@@ -107,7 +101,6 @@ namespace YTPPlus
                 }
 
                 process.WaitForExit();
-                stderrThread.Join();
                 Console.WriteLine(s);
                 return s;
 
@@ -123,7 +116,7 @@ namespace YTPPlus
          * @param endTime start time (in TimeStamp format, e.g. new TimeStamp(seconds);)
          * @param output output video filename to save the snipped clip to
          */
-        public void snipVideo(string video, TimeStamp startTime, TimeStamp endTime, string output, int width, int height)
+        public void snipVideo(string video, double startTime, double endTime, string output, int width, int height)
         {
             try
             {
@@ -132,8 +125,8 @@ namespace YTPPlus
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = FFMPEG;
                 startInfo.Arguments = "-i \"" + video
-                        + "\" -ss " + startTime.getTimeStamp()
-                        + " -to " + endTime.getTimeStamp()
+                        + "\" -ss " + startTime
+                        + " -to " + endTime
                         + " -ac 1"
                         + " -ar 44100"
                         + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"

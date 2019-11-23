@@ -103,7 +103,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="YTPPlus\EffectsFactory.cs" />
-    <Compile Include="YTPPlus\TimeStamp.cs" />
     <Compile Include="YTPPlus\Utilities.cs" />
     <Compile Include="YTPPlus\YTPGenerator.cs" />
     <EmbeddedResource Include="AboutBox.resx">

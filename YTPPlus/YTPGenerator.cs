@@ -162,14 +162,14 @@ namespace YTPPlus
                         string sourceToPick = sourceList[randomInt(0, sourceList.Count - 1)].ToString();
                         Console.WriteLine(sourceToPick);
                         Console.WriteLine(toolBox.getLength(sourceToPick));
-                        TimeStamp boy = new TimeStamp(toolBox.getLength(sourceToPick));
-                        Console.WriteLine(boy.getTimeStamp());
+                        double boy = (double) decimal.Parse(toolBox.getLength(sourceToPick)); //i swear
+                        Console.WriteLine(boy);
                         Console.WriteLine("STARTING CLIP " + "video" + i);
-                        TimeStamp startOfClip = new TimeStamp(randomDouble(0.0, boy.getLengthSec() - MAX_STREAM_DURATION));
+                        double startOfClip = randomDouble(0.0, boy - MAX_STREAM_DURATION);
                         //Console.WriteLine("boy seconds = "+  boy.getLengthSec());
-                        TimeStamp endOfClip = new TimeStamp(startOfClip.getLengthSec() + randomDouble(MIN_STREAM_DURATION, MAX_STREAM_DURATION));
-                        Console.WriteLine("Beginning of clip " + i + ": " + startOfClip.getTimeStamp());
-                        Console.WriteLine("Ending of clip " + i + ": " + endOfClip.getTimeStamp() + ", in seconds: ");
+                        double endOfClip = startOfClip + randomDouble(MIN_STREAM_DURATION, MAX_STREAM_DURATION);
+                        Console.WriteLine("Beginning of clip " + i + ": " + startOfClip);
+                        Console.WriteLine("Ending of clip " + i + ": " + endOfClip + ", in seconds: ");
                         if (randomInt(0, 15) == 15 && insertTransitionClips == true)
                         {
                             Console.WriteLine("Tryina use a diff source");
