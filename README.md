@@ -29,3 +29,6 @@ Try adding magick.exe to your system path. If you've checked the box needed in t
 
 ## I got a great idea for the program, where to start?
 Anyone is welcome to submit a pull request or suggest ideas via the [Discord server](https://discord.gg/bzhzRmg).
+
+## OSS Credits
+[FFmpeg](https://github.com/FFmpeg/FFmpeg), [LibVLC](https://github.com/videolan/vlc), and [Vlc.DotNet](https://github.com/ZeBobo5/Vlc.DotNet).
