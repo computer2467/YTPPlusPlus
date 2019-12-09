@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YTPPlusPlus));
-            this.Player = new Vlc.DotNet.Forms.VlcControl();
             this.Video = new System.Windows.Forms.Panel();
             this.Render = new System.Windows.Forms.Button();
             this.PausePlay = new System.Windows.Forms.Button();
@@ -92,6 +91,7 @@
             this.m_sounds = new System.Windows.Forms.MenuItem();
             this.m_music = new System.Windows.Forms.MenuItem();
             this.m_resources = new System.Windows.Forms.MenuItem();
+            this.m_printconfig = new System.Windows.Forms.MenuItem();
             this.m_reset = new System.Windows.Forms.MenuItem();
             this.m_help = new System.Windows.Forms.MenuItem();
             this.m_helpeffects = new System.Windows.Forms.MenuItem();
@@ -107,8 +107,7 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.openFileDialogFFProbe = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.m_printconfig = new System.Windows.Forms.MenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.Player)).BeginInit();
+            this.folderBrowserVLC = new System.Windows.Forms.FolderBrowserDialog();
             this.Video.SuspendLayout();
             this.Effects.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -121,18 +120,6 @@
             this.Materials.SuspendLayout();
             this.SuspendLayout();
             // 
-            // Player
-            // 
-            this.Player.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Player.BackColor = System.Drawing.Color.Black;
-            this.Player.Location = new System.Drawing.Point(-1, -1);
-            this.Player.Name = "Player";
-            this.Player.Size = new System.Drawing.Size(320, 240);
-            this.Player.Spu = -1;
-            this.Player.TabIndex = 0;
-            this.Player.VlcLibDirectory = ((System.IO.DirectoryInfo)(resources.GetObject("Player.VlcLibDirectory")));
-            this.Player.VlcMediaplayerOptions = null;
-            // 
             // Video
             // 
             this.Video.AccessibleDescription = "Generated Video";
@@ -144,7 +131,6 @@
             this.Video.Controls.Add(this.SaveAs);
             this.Video.Controls.Add(this.End);
             this.Video.Controls.Add(this.Start);
-            this.Video.Controls.Add(this.Player);
             this.Video.Location = new System.Drawing.Point(12, 12);
             this.Video.Name = "Video";
             this.Video.Size = new System.Drawing.Size(320, 288);
@@ -775,6 +761,7 @@
             this.m_saveas.Index = 1;
             this.m_saveas.Shortcut = System.Windows.Forms.Shortcut.F3;
             this.m_saveas.Text = "Save As...";
+            this.m_saveas.Click += new System.EventHandler(this.m_saveas_Click);
             // 
             // m_view
             // 
@@ -849,6 +836,12 @@
             this.m_resources.Text = "Set resources/ folder";
             this.m_resources.Click += new System.EventHandler(this.m_resources_Click);
             // 
+            // m_printconfig
+            // 
+            this.m_printconfig.Index = 7;
+            this.m_printconfig.Text = "Print current config";
+            this.m_printconfig.Click += new System.EventHandler(this.m_printconfig_Click);
+            // 
             // m_reset
             // 
             this.m_reset.Index = 8;
@@ -900,6 +893,7 @@
             // 
             this.openFileDialogMagick.FileName = "magick.exe";
             this.openFileDialogMagick.Filter = "ImageMagick|magick.exe";
+            this.openFileDialogMagick.Title = "Select ImageMagick";
             // 
             // folderBrowserSounds
             // 
@@ -915,13 +909,14 @@
             // 
             // openFileDialogSource
             // 
-            this.openFileDialogSource.Filter = "MPEG-4 Video|*.mp4";
             this.openFileDialogSource.Multiselect = true;
+            this.openFileDialogSource.Title = "Select a material clip (Only videos!)";
             // 
             // openFileDialogFFmpeg
             // 
             this.openFileDialogFFmpeg.FileName = "ffmpeg.exe";
             this.openFileDialogFFmpeg.Filter = "FFMpeg|ffmpeg.exe";
+            this.openFileDialogFFmpeg.Title = "Select FFMpeg";
             // 
             // openFileDialogFFProbe
             // 
@@ -932,11 +927,10 @@
             // 
             this.saveFileDialog.Filter = "MPEG-4 Video|*.mp4";
             // 
-            // m_printconfig
+            // folderBrowserVLC
             // 
-            this.m_printconfig.Index = 7;
-            this.m_printconfig.Text = "Print current config";
-            this.m_printconfig.Click += new System.EventHandler(this.m_printconfig_Click);
+            this.folderBrowserVLC.Description = "Please locate your VLC directory. (VideoLAN/VLC)";
+            this.folderBrowserVLC.RootFolder = System.Environment.SpecialFolder.ProgramFilesX86;
             // 
             // YTPPlusPlus
             // 
@@ -962,7 +956,6 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "YTP++";
-            ((System.ComponentModel.ISupportInitialize)(this.Player)).EndInit();
             this.Video.ResumeLayout(false);
             this.Effects.ResumeLayout(false);
             this.Effects.PerformLayout();
@@ -982,8 +975,6 @@
         }
 
         #endregion
-
-        private Vlc.DotNet.Forms.VlcControl Player;
         private System.Windows.Forms.Panel Video;
         private System.Windows.Forms.Button PausePlay;
         private System.Windows.Forms.Button Start;
@@ -1061,6 +1052,7 @@
         private System.Windows.Forms.MenuItem m_about;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.MenuItem m_printconfig;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserVLC;
     }
 }
 

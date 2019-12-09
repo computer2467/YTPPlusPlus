@@ -161,8 +161,11 @@ namespace YTPPlus
                         vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(i, MAX_CLIPS) * 100));
                         string sourceToPick = sourceList[randomInt(0, sourceList.Count - 1)].ToString();
                         Console.WriteLine(sourceToPick);
-                        Console.WriteLine(toolBox.getLength(sourceToPick));
-                        double boy = (double) decimal.Parse(toolBox.getLength(sourceToPick)); //i swear
+                        
+                        decimal source = decimal.Parse(toolBox.getLength(sourceToPick));
+                        string output = source.ToString("0.#########################");
+                        Console.WriteLine(toolBox.getLength(sourceToPick) + " -> " + output + " -> " + double.Parse(output));
+                        double boy = double.Parse(output);
                         Console.WriteLine(boy);
                         Console.WriteLine("STARTING CLIP " + "video" + i);
                         double startOfClip = randomDouble(0.0, boy - MAX_STREAM_DURATION);

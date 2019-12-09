@@ -10,6 +10,9 @@ namespace YTPPlusPlus
 {
     public partial class YTPPlusPlus : Form
     {
+        //vlc check
+        Vlc.DotNet.Forms.VlcControl Player;
+        bool renderComplete = true;
         //tool variables
         string ffmpeg = "ffmpeg.exe";
         string ffprobe = "ffprobe.exe";
@@ -197,19 +200,66 @@ namespace YTPPlusPlus
                 System.Environment.Exit(1);
             }
         }
-        public YTPPlusPlus()
+        public void vlcC(DirectoryInfo dir)
         {
-            InitializeComponent();
+            this.Player = new Vlc.DotNet.Forms.VlcControl();
+            ((System.ComponentModel.ISupportInitialize)(this.Player)).BeginInit();
+            this.Player.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Player.BackColor = System.Drawing.Color.Black;
+            this.Player.Enabled = false;
+            this.Player.Location = new System.Drawing.Point(-1, -1);
+            this.Player.Name = "Player";
+            this.Player.Size = new System.Drawing.Size(320, 240);
+            this.Player.Spu = -1;
+            this.Player.TabIndex = 0;
+            this.Player.VlcMediaplayerOptions = null;
+            this.Player.VlcLibDirectory = dir;
+            this.Video.Controls.Add(this.Player);
+            ((System.ComponentModel.ISupportInitialize)(this.Player)).EndInit();
+            //VLCCheck.global.Close();
+            Player.Enabled = true;
             ResetVars();
             HideConsoleWindow();
             //this.Player.SetMedia(fi);
             //this.Player.Play();
             this.Player.Enabled = false;
+            this.m_saveas.Enabled = false;
             this.SaveAs.Enabled = false;
             TestFFMPEG();
             TestFFPROBE();
             TestMagick();
-
+        }
+        public YTPPlusPlus()
+        {
+            InitializeComponent();
+            if (Directory.Exists("C:/Program Files (x86)/VideoLAN/VLC"))
+            {
+                vlcC(new DirectoryInfo("C:/Program Files (x86)/VideoLAN/VLC"));
+            }
+            else
+            {
+                DialogResult result = folderBrowserVLC.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    vlcC(new DirectoryInfo(folderBrowserVLC.SelectedPath));
+                }
+                else
+                {
+                    PausePlay.Enabled = false;
+                    Start.Enabled = false;
+                    End.Enabled = false;
+                    ResetVars();
+                    HideConsoleWindow();
+                    //this.Player.SetMedia(fi);
+                    //this.Player.Play();
+                    this.SaveAs.Enabled = false;
+                    this.m_saveas.Enabled = false;
+                    TestFFMPEG();
+                    TestFFPROBE();
+                    TestMagick();
+                }
+            }
+            
         }
         public void PlayVideo(FileInfo fil)
         {
@@ -372,9 +422,34 @@ namespace YTPPlusPlus
                     Array.Resize(ref sources, sources.Length + 1);
                     sources[sources.GetUpperBound(0)] = file;
                     Material.Text += file + "\n";
+                    //assuming these all don't work
                     if (file.Contains(" "))
                     {
-                        alert("One or more materials added in this batch has a space in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failiure.");
+                        alert("One or more materials added in this batch has a space in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failure.");
+                    }
+                    else if (file.Contains("+"))
+                    {
+                        alert("One or more materials added in this batch has a + symbol in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failure.");
+                    }
+                    else if (file.Contains("%"))
+                    {
+                        alert("One or more materials added in this batch has a % symbol in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failure.");
+                    }
+                    else if (file.Contains("&"))
+                    {
+                        alert("One or more materials added in this batch has an & symbol in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failure.");
+                    }
+                    else if (file.Contains("*"))
+                    {
+                        alert("One or more materials added in this batch has a * symbol in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failure.");
+                    }
+                    else if (file.Contains("="))
+                    {
+                        alert("One or more materials added in this batch has a = symbol in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failure.");
+                    }
+                    else if (file.Contains("~"))
+                    {
+                        alert("One or more materials added in this batch has a ~ symbol in its path or file name. While YTP++ will still try to render with the material in question, be aware that this may cause a render failure.");
                     }
                 }
             }
@@ -418,12 +493,16 @@ namespace YTPPlusPlus
         public void complete(object sender, RunWorkerCompletedEventArgs e)
         {
             progressBar1.Value = 100;
-            this.Player.Enabled = true;
+            if(this.Player != null)
+                this.Player.Enabled = true;
+            renderComplete = true;
             this.SaveAs.Enabled = true;
-            this.Player.Stop();
+            this.m_saveas.Enabled = true;
+            if (this.Player != null)
+                this.Player.Stop();
             fi = new FileInfo(temp + "tempoutput.mp4");
-            
-            this.Player.SetMedia(fi);
+            if (this.Player != null)
+                this.Player.SetMedia(fi);
             this.PausePlay.Text = "▶️";
             Render.Enabled = true;
             m_render.Enabled = true;
@@ -442,8 +521,12 @@ namespace YTPPlusPlus
             {
                 try
                 {
-                    this.Player.Stop();
-                    this.Player.Enabled = false;
+                    if (this.Player != null)
+                        this.Player.Stop();
+                    renderComplete = false;
+                    if(this.Player != null)
+                        this.Player.Enabled = false;
+                    this.m_saveas.Enabled = false;
                     this.SaveAs.Enabled = false;
                     Render.Enabled = false;
                     m_render.Enabled = false;
@@ -547,7 +630,7 @@ namespace YTPPlusPlus
 
         private void SaveAs_Click(object sender, EventArgs e)
         {
-            if (this.Player.Enabled)
+            if (renderComplete)
             {
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -570,6 +653,21 @@ namespace YTPPlusPlus
                 + "\n\n" + "My SOURCES is: " + TransitionDir.Text
                 + "\n\n" + "My MUSIC is: " + music
                 + "\n\n" + "My RESOURCES is: " + resources);
+        }
+
+        private void m_saveas_Click(object sender, EventArgs e)
+        {
+            if (renderComplete)
+            {
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (File.Exists(temp + "tempoutput.mp4"))
+                    {
+                        FileInfo file = new FileInfo(temp + "tempoutput.mp4");
+                        file.CopyTo(saveFileDialog.FileName);
+                    }
+                }
+            }
         }
     }
 }
