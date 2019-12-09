@@ -3,7 +3,7 @@
   <h2 align="center">Made with ❤ in C#.</h2>
   <p align="center">
     <a href="https://discord.gg/bzhzRmg"><img alt="YTP+ Hub" src="https://img.shields.io/discord/641428540486844417"></a>
-<a href="https://github.com/PokemonUnity/PokemonUnity/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/YTP-Plus/YTPPlusPlus"></a>
+<a href="https://github.com/YTP-Plus/YTPPlusPlus/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/YTP-Plus/YTPPlusPlus"></a>
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/YTP-Plus/YTPPlusPlus">
   <a href="https://github.com/YTP-Plus/YTPPlusPlus/blob/master/LICENSE.txt"><img alt="GitHub license" src="https://img.shields.io/github/license/YTP-Plus/YTPPlusPlus"></a>
   </p>
