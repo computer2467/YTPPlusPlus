@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -560,8 +561,8 @@ namespace YTPPlusPlus
                     generator.effect10 = this.checkBox10.Checked;
                     generator.effect11 = this.checkBox11.Checked;
                     generator.insertTransitionClips = InsertTransitions.Checked;
-                    generator.width = Convert.ToInt32(this.WidthSet.Value);
-                    generator.height = Convert.ToInt32(this.HeightSet.Value);
+                    generator.width = Convert.ToInt32(this.WidthSet.Value, new CultureInfo("en-US"));
+                    generator.height = Convert.ToInt32(this.HeightSet.Value, new CultureInfo("en-US"));
                     generator.intro = this.InsertIntro.Checked;
                     generator.outro = this.InsertOutro.Checked;
                     Console.WriteLine("poop5");
@@ -570,10 +571,10 @@ namespace YTPPlusPlus
                         generator.addSource("\"" + sourcem + "\"");
                     }
                     Console.WriteLine("poop6");
-                    int maxclips = Convert.ToInt32(Clips.Value);
-                    generator.setMaxClips(Convert.ToInt32(Clips.Value));
-                    generator.setMaxDuration(Convert.ToDouble(MaxStreamDur.Value));
-                    generator.setMinDuration(Convert.ToDouble(MinStreamDur.Value));
+                    int maxclips = Convert.ToInt32(Clips.Value, new CultureInfo("en-US"));
+                    generator.setMaxClips(Convert.ToInt32(Clips.Value, new CultureInfo("en-US")));
+                    generator.setMaxDuration(Convert.ToDouble(MaxStreamDur.Value, new CultureInfo("en-US")));
+                    generator.setMinDuration(Convert.ToDouble(MinStreamDur.Value, new CultureInfo("en-US")));
                     Console.WriteLine("poop7");
 
                     double timeStarted = nanoTime();

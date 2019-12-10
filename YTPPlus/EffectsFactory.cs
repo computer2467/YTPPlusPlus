@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 /**
@@ -71,7 +72,7 @@ namespace YTPPlus
                         //+ " -c:v copy"
 
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
 
                         + " -map 0:v"
                         + " -map [out]"
@@ -134,7 +135,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -af \"volume=0\" -y " + toolBox.TEMP + "temp2.mp4";
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -171,7 +172,7 @@ namespace YTPPlus
                         + " -i \"" + toolBox.SOUNDS + "" + randomSound + "\""
                         + " -to " + soundLength
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -filter_complex \"[1:a]volume=1,apad[A]; [0:a][A]amerge[out]\" -ac 2 -map 0:v -map [out] -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -233,7 +234,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4 -map 0"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -af \"areverse\" -y " + toolBox.TEMP + "temp2.mp4";
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -268,7 +269,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp2.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -vf reverse -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -322,7 +323,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -filter:v setpts=0.5*PTS -filter:a atempo=2.0 -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -375,7 +376,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -filter:v setpts=2*PTS -filter:a atempo=0.5 -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -428,7 +429,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -af chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3 -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -481,7 +482,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -af vibrato=f=7.0:d=0.5 -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -534,7 +535,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -filter:v setpts=2*PTS -af asetrate=44100*0.5,aresample=44100 -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -587,7 +588,7 @@ namespace YTPPlus
                 startInfo.FileName = toolBox.FFMPEG;
                 startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -filter:v setpts=0.5*PTS -af asetrate=44100*2,aresample=44100 -y " + video;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -672,18 +673,18 @@ namespace YTPPlus
                 commands.SetValue("-i " + toolBox.TEMP + "temp.mp4 -map 0"// -c:v copy"
                         + " -ar 44100"
                         + " -to 00:00:0" + randomTime2 + "." + randomTime
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1"
                         + " -an"
                         + " -y " + toolBox.TEMP + "temp2.mp4", 0);
 
                 commands.SetValue("-i " + toolBox.TEMP + "temp2.mp4 -map 0"// -c:v copy"
                         + " -ar 44100"
-                        + " -vf reverse,scale=" + width + "x" + height + ",setsar=1:1"
+                        + " -vf reverse,scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1"
                         + " -y " + toolBox.TEMP + "temp3.mp4", 1);
 
                 commands.SetValue("-i " + toolBox.TEMP + "temp3.mp4"
                         + " -ar 44100"
-                        + " -vf reverse,scale=" + width + "x" + height + ",setsar=1:1"
+                        + " -vf reverse,scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1"
                         + " -y " + toolBox.TEMP + "temp4.mp4", 2);
 
                 commands.SetValue("-i " + toolBox.TEMP + "temp3.mp4"
@@ -696,7 +697,7 @@ namespace YTPPlus
                 commands.SetValue("-i " + toolBox.TEMP + "temp5.mp4"
                         + " -map 0"
                         + " -ar 44100"
-                        + " -vf \"setpts=0.5*PTS,scale=" + width + "x" + height + ",setsar=1:1\""
+                        + " -vf \"setpts=0.5*PTS,scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1\""
                         + " -af \"atempo=2.0\""
                         + " -shortest"
                         + " -y " + toolBox.TEMP + "temp6.mp4", 4);
@@ -705,7 +706,7 @@ namespace YTPPlus
                         + " -i " + toolBox.MUSIC + randomSound
                         + " -c:v libx264"
                         + " -map 0:v:0 -map 1:a:0"
-                        + " -vf \"scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30\""
+                        + " -vf \"scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30\""
                         + " -shortest"
                         + " -y " + video, 5);
 
@@ -846,7 +847,7 @@ namespace YTPPlus
                     );
                 }
                 commands.SetValue(toolBox.MAGICK, 6);
-                args.SetValue("convert -size " + width + "x" + height + " canvas:black " + toolBox.TEMP + "black.png", 6);
+                args.SetValue("convert -size " + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + " canvas:black " + toolBox.TEMP + "black.png", 6);
 
                 if (File.Exists(toolBox.TEMP + "concatsquidward.txt"))
                     File.Delete(toolBox.TEMP + "concatsquidward.txt");
@@ -872,7 +873,7 @@ namespace YTPPlus
                         + " -i " + toolBox.TEMP + "concatsquidward.txt"
                         + " -i " + toolBox.RESOURCES + "squidward/music.wav"
                         + " -map 0:v:0 -map 1:a:0"
-                        + " -vf \"scale=" + width + "x" + height + ",setsar=1:1\""
+                        + " -vf \"scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1\""
                         + " -pix_fmt yuv420p"
                         + " -y " + video, 7);
 

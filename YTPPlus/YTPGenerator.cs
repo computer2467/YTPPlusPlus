@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 
 namespace YTPPlus
@@ -150,7 +151,7 @@ namespace YTPPlus
                         MAX_CLIPS++;
                         Console.WriteLine("Intro clip enabled, adding 1 to max clips. New max clips is " + MAX_CLIPS + ".");
                         Console.WriteLine("Done: " + Decimal.Divide(i, MAX_CLIPS));
-                        vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(i, MAX_CLIPS) * 100));
+                        vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(i, MAX_CLIPS) * 100, new CultureInfo("en-US")));
                         Console.WriteLine(toolBox.intro);
                         Console.WriteLine("STARTING CLIP " + "video" + i);
                         toolBox.copyVideo(toolBox.intro, toolBox.TEMP + "video" + i, width, height);
@@ -158,21 +159,21 @@ namespace YTPPlus
                     else
                     {
                         Console.WriteLine("Done: " + Decimal.Divide(i, MAX_CLIPS));
-                        vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(i, MAX_CLIPS) * 100));
+                        vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(i, MAX_CLIPS) * 100, new CultureInfo("en-US")));
                         string sourceToPick = sourceList[randomInt(0, sourceList.Count - 1)].ToString();
                         Console.WriteLine(sourceToPick);
                         
-                        decimal source = decimal.Parse(toolBox.getLength(sourceToPick));
-                        string output = source.ToString("0.#########################");
-                        Console.WriteLine(toolBox.getLength(sourceToPick) + " -> " + output + " -> " + double.Parse(output));
-                        double boy = double.Parse(output);
+                        decimal source = decimal.Parse(toolBox.getLength(sourceToPick), NumberStyles.Any, new CultureInfo("en-US"));
+                        string output = source.ToString("0.#########################", new CultureInfo("en-US"));
+                        Console.WriteLine(toolBox.getLength(sourceToPick) + " -> " + output + " -> " + double.Parse(output, NumberStyles.Any, new CultureInfo("en-US")));
+                        double boy = double.Parse(output, NumberStyles.Any, new CultureInfo("en-US"));
                         Console.WriteLine(boy);
                         Console.WriteLine("STARTING CLIP " + "video" + i);
                         double startOfClip = randomDouble(0.0, boy - MAX_STREAM_DURATION);
                         //Console.WriteLine("boy seconds = "+  boy.getLengthSec());
                         double endOfClip = startOfClip + randomDouble(MIN_STREAM_DURATION, MAX_STREAM_DURATION);
-                        Console.WriteLine("Beginning of clip " + i + ": " + startOfClip);
-                        Console.WriteLine("Ending of clip " + i + ": " + endOfClip + ", in seconds: ");
+                        Console.WriteLine("Beginning of clip " + i + ": " + startOfClip.ToString("0.#########################", new CultureInfo("en-US")));
+                        Console.WriteLine("Ending of clip " + i + ": " + endOfClip.ToString("0.#########################", new CultureInfo("en-US")) + ", in seconds: ");
                         if (randomInt(0, 15) == 15 && insertTransitionClips == true)
                         {
                             Console.WriteLine("Tryina use a diff source");
@@ -244,7 +245,7 @@ namespace YTPPlus
                     MAX_CLIPS++;
                     Console.WriteLine("Outro clip enabled.");
                     Console.WriteLine("Done: " + Decimal.Divide(MAX_CLIPS - 1, MAX_CLIPS));
-                    vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(MAX_CLIPS - 1, MAX_CLIPS) * 100));
+                    vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(MAX_CLIPS - 1, MAX_CLIPS) * 100, new CultureInfo("en-US")));
                     Console.WriteLine(toolBox.outro);
                     Console.WriteLine("STARTING CLIP " + "video" + MAX_CLIPS);
                     toolBox.copyVideo(toolBox.outro, toolBox.TEMP + "video" + MAX_CLIPS, width, height);

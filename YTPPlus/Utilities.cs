@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 
@@ -125,11 +126,11 @@ namespace YTPPlus
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = FFMPEG;
                 startInfo.Arguments = "-i \"" + video
-                        + "\" -ss " + startTime
-                        + " -to " + endTime
+                        + "\" -ss " + startTime.ToString("0.#########################", new CultureInfo("en-US"))
+                        + " -to " + endTime.ToString("0.#########################", new CultureInfo("en-US"))
                         + " -ac 1"
                         + " -ar 44100"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -y"
                         + " " + output + ".mp4";
                 startInfo.UseShellExecute = false;
@@ -182,7 +183,7 @@ namespace YTPPlus
                         + "\" -ar 44100"
                         + " -ac 1"
                         //+ " -filter:v fps=fps=30,setsar=1:1"
-                        + " -vf scale=" + width + "x" + height + ",setsar=1:1,fps=fps=30"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
                         + " -y"
                         + " " + output + ".mp4";
                 startInfo.UseShellExecute = false;
