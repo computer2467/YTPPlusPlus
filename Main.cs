@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -54,20 +55,25 @@ namespace YTPPlusPlus
         string musicDef = "music\\";
         string resourcesDef = "resources\\";
         YTPGenerator globalGen;
+        int pluginCount = 0;
+        List<string> enabledPlugins = new List<string>();
+        Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager taskbarInstance;
+        System.Media.SoundPlayer renderCompleteSnd;
+        System.Media.SoundPlayer renderFailedSnd;
         public void ResetVars()
         {
             this.InsertTransitions.Checked = transitionsDef;
-            this.checkBox1.Checked = effect1Def;
-            this.checkBox2.Checked = effect2Def;
-            this.checkBox3.Checked = effect3Def;
-            this.checkBox4.Checked = effect4Def;
-            this.checkBox5.Checked = effect5Def;
-            this.checkBox6.Checked = effect6Def;
-            this.checkBox7.Checked = effect7Def;
-            this.checkBox8.Checked = effect8Def;
-            this.checkBox9.Checked = effect9Def;
-            this.checkBox10.Checked = effect10Def;
-            this.checkBox11.Checked = effect11Def;
+            this.effect_RandomSound.Checked = effect1Def;
+            this.effect_RandomSoundMute.Checked = effect2Def;
+            this.effect_Reverse.Checked = effect3Def;
+            this.effect_SpeedUp.Checked = effect4Def;
+            this.effect_SlowDown.Checked = effect5Def;
+            this.effect_Chorus.Checked = effect6Def;
+            this.effect_Vibrato.Checked = effect7Def;
+            this.effect_HighPitch.Checked = effect8Def;
+            this.effect_SlowDown.Checked = effect9Def;
+            this.effect_Dance.Checked = effect10Def;
+            this.effect_Squidward.Checked = effect11Def;
             this.InsertIntro.Checked = introBoolDef;
             this.InsertOutro.Checked = outroBoolDef;
             this.Clips.Value = clipCountDef;
@@ -85,6 +91,36 @@ namespace YTPPlusPlus
             this.sounds = Directory.GetCurrentDirectory() + "\\" + soundsDef;
             this.music = Directory.GetCurrentDirectory() + "\\" + musicDef;
             this.resources = Directory.GetCurrentDirectory() + "\\" + resourcesDef;
+            pluginCount = 0;
+            enabledPlugins.Clear();
+            plugins.MenuItems.Clear();
+            this.renderCompleteSnd = new System.Media.SoundPlayer(this.resources + "\\rendercomplete.wav");
+            this.renderFailedSnd = new System.Media.SoundPlayer(this.resources + "\\renderfailed.wav");
+            if (Directory.Exists(Directory.GetCurrentDirectory() + "\\plugins")) {
+                string[] d = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\plugins", "*.bat");
+                foreach (string s in d)
+                {
+                    void f(object sender, EventArgs args)
+                    {
+                        MenuItem ss = (MenuItem)sender;
+                        ss.Checked = !ss.Checked;
+                        if (ss.Checked == true)
+                        {
+                            pluginCount++;
+                            enabledPlugins.Add(s);
+                        }
+                        else
+                        {
+                            pluginCount--;
+                            enabledPlugins.Remove(s);
+                        }
+                    }
+                    plugins.MenuItems.Remove(noPlugins);
+                    string newstring = s.Replace(Directory.GetCurrentDirectory() + "\\plugins\\", "");
+                    plugins.MenuItems.Add(new MenuItem(newstring, f));
+                }
+            }
+
         }
         //end default variables
 
@@ -143,20 +179,20 @@ namespace YTPPlusPlus
                 if (process.ExitCode == 1)
                 {
                     alert("ImageMagick is not installed. The Squidward effect has been disabled.\nPlease install ImageMagick and add it to your system PATH, or select \"Set magick.exe\" in the Tools menu.");
-                    checkBox11.Enabled = false;
-                    checkBox11.Checked = false;
+                    effect_Squidward.Enabled = false;
+                    effect_Squidward.Checked = false;
                 }
                 else
                 {
-                    checkBox11.Enabled = true;
-                    checkBox11.Checked = true;
+                    effect_Squidward.Enabled = true;
+                    effect_Squidward.Checked = true;
                 }
             }
             catch
             {
                 alert("ImageMagick is not installed. The Squidward effect has been disabled.\nPlease install ImageMagick and add it to your system PATH, or select \"Set magick.exe\" in the Tools menu.");
-                checkBox11.Enabled = false;
-                checkBox11.Checked = false;
+                effect_Squidward.Enabled = false;
+                effect_Squidward.Checked = false;
             }
         }
         public void TestFFMPEG()
@@ -260,7 +296,6 @@ namespace YTPPlusPlus
                     TestMagick();
                 }
             }
-            
         }
         public void PlayVideo(FileInfo fil)
         {
@@ -271,6 +306,10 @@ namespace YTPPlusPlus
         }
         private void PausePlay_Click(object sender, EventArgs e)
         {
+            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+            {
+                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+            }
             if (this.Player.IsPlaying)
             {
                 this.PausePlay.Text = "▶️";
@@ -286,6 +325,10 @@ namespace YTPPlusPlus
 
         private void Start_Click(object sender, EventArgs e)
         {
+            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+            {
+                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+            }
             if (fi != null)
             {
                 
@@ -298,6 +341,10 @@ namespace YTPPlusPlus
 
         private void End_Click(object sender, EventArgs e)
         {
+            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+            {
+                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+            }
             this.Player.Position += 0.1f;
             if (this.Player.Position > 1f)
                 this.Player.Position = 0.999f;
@@ -490,11 +537,19 @@ namespace YTPPlusPlus
         public void progress(object sender, ProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
+            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+            {
+                taskbarInstance.SetProgressValue(e.ProgressPercentage,100);
+            }
         }
         public void complete(object sender, RunWorkerCompletedEventArgs e)
         {
             progressBar1.Value = 100;
-            if(this.Player != null)
+            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+            {
+                taskbarInstance.SetProgressValue(100, 100);
+            }
+            if (this.Player != null)
                 this.Player.Enabled = true;
             renderComplete = true;
             this.SaveAs.Enabled = true;
@@ -509,7 +564,15 @@ namespace YTPPlusPlus
             m_render.Enabled = true;
             if (globalGen.failed)
             {
+                if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+                {
+                    taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Error);
+                }
+                renderFailedSnd.Play();
                 alert("An exception has occured during rendering. Rendering may have not produced a result.\n\nThe last exception to occur was:\n" + globalGen.exc.Message);
+            } else
+            {
+                renderCompleteSnd.Play();
             }
         }
         public void RenderVideo()
@@ -522,6 +585,10 @@ namespace YTPPlusPlus
             {
                 try
                 {
+                    if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+                    {
+                        taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
+                    }
                     if (this.Player != null)
                         this.Player.Stop();
                     renderComplete = false;
@@ -538,7 +605,7 @@ namespace YTPPlusPlus
                     generator.toolBox.FFPROBE = "\"" + ffprobe + "\"";
                     generator.toolBox.MAGICK = "\"" + magick + "\"";
                     Console.WriteLine("poop3");
-                    string jobDir = temp + "job_" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + "/";
+                    string jobDir = temp + "job_" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + "\\";
                     generator.toolBox.TEMP = jobDir;
                     Directory.CreateDirectory(jobDir);
                     Directory.CreateDirectory(generator.toolBox.TEMP);
@@ -549,17 +616,20 @@ namespace YTPPlusPlus
                     generator.toolBox.intro = this.Intro.Text;
                     generator.toolBox.outro = this.Outro.Text;
                     Console.WriteLine("poop4");
-                    generator.effect1 = this.checkBox1.Checked;
-                    generator.effect2 = this.checkBox2.Checked;
-                    generator.effect3 = this.checkBox3.Checked;
-                    generator.effect4 = this.checkBox4.Checked;
-                    generator.effect5 = this.checkBox5.Checked;
-                    generator.effect6 = this.checkBox6.Checked;
-                    generator.effect7 = this.checkBox7.Checked;
-                    generator.effect8 = this.checkBox8.Checked;
-                    generator.effect9 = this.checkBox9.Checked;
-                    generator.effect10 = this.checkBox10.Checked;
-                    generator.effect11 = this.checkBox11.Checked;
+                    generator.effect1 = this.effect_RandomSound.Checked;
+                    generator.effect2 = this.effect_RandomSoundMute.Checked;
+                    generator.effect3 = this.effect_Reverse.Checked;
+                    generator.effect4 = this.effect_SpeedUp.Checked;
+                    generator.effect5 = this.effect_SlowDown.Checked;
+                    generator.effect6 = this.effect_Chorus.Checked;
+                    generator.effect7 = this.effect_Vibrato.Checked;
+                    generator.effect8 = this.effect_HighPitch.Checked;
+                    generator.effect9 = this.effect_LowPitch.Checked;
+                    generator.effect10 = this.effect_Dance.Checked;
+                    generator.effect11 = this.effect_Squidward.Checked;
+                    generator.effect12 = this.effect_RainbowTrail.Checked;
+                    generator.pluginCount = pluginCount;
+                    generator.plugins = enabledPlugins;
                     generator.insertTransitionClips = InsertTransitions.Checked;
                     generator.width = Convert.ToInt32(this.WidthSet.Value, new CultureInfo("en-US"));
                     generator.height = Convert.ToInt32(this.HeightSet.Value, new CultureInfo("en-US"));
@@ -580,7 +650,10 @@ namespace YTPPlusPlus
                     double timeStarted = nanoTime();
                     double elapsedTime = nanoTime() - timeStarted;
 
-
+                    if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+                    {
+                        taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal);
+                    }
                     globalGen = generator.go(new ProgressChangedEventHandler(progress), new RunWorkerCompletedEventHandler(complete));
                     Console.WriteLine("poop8");
                 }
@@ -631,6 +704,10 @@ namespace YTPPlusPlus
 
         private void SaveAs_Click(object sender, EventArgs e)
         {
+            if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+            {
+                taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+            }
             if (renderComplete)
             {
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -669,6 +746,65 @@ namespace YTPPlusPlus
                     }
                 }
             }
+        }
+
+        private void effect_Reverse_Click(object sender, EventArgs e)
+        {
+            effect_Reverse.Checked = !effect_Reverse.Checked;
+        }
+
+        private void effect_HighPitch_Click(object sender, EventArgs e)
+        {
+            effect_HighPitch.Checked = !effect_HighPitch.Checked;
+        }
+
+        private void effect_SpeedUp_Click(object sender, EventArgs e)
+        {
+            effect_SpeedUp.Checked = !effect_SpeedUp.Checked;
+        }
+
+        private void effect_LowPitch_Click(object sender, EventArgs e)
+        {
+            effect_LowPitch.Checked = !effect_LowPitch.Checked;
+        }
+
+        private void effect_SlowDown_Click(object sender, EventArgs e)
+        {
+            effect_SlowDown.Checked = !effect_SlowDown.Checked;
+        }
+
+        private void effect_Dance_Click(object sender, EventArgs e)
+        {
+            effect_Dance.Checked = !effect_Dance.Checked;
+        }
+
+        private void effect_Squidward_Click(object sender, EventArgs e)
+        {
+            effect_Squidward.Checked = !effect_Squidward.Checked;
+        }
+
+        private void effect_RainbowTrail_Click(object sender, EventArgs e)
+        {
+            effect_RainbowTrail.Checked = !effect_RainbowTrail.Checked;
+        }
+
+        private void effect_RandomSound_Click(object sender, EventArgs e)
+        {
+            effect_RandomSound.Checked = !effect_RandomSound.Checked;
+        }
+        private void effect_RandomSoundMute_Click(object sender, EventArgs e)
+        {
+            effect_RandomSoundMute.Checked = !effect_RandomSoundMute.Checked;
+        }
+
+        private void effect_Chorus_Click(object sender, EventArgs e)
+        {
+            effect_Chorus.Checked = !effect_Chorus.Checked;
+        }
+
+        private void effect_Vibrato_Click(object sender, EventArgs e)
+        {
+            effect_Vibrato.Checked = !effect_Vibrato.Checked;
         }
     }
 }

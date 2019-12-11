@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -28,6 +29,10 @@ namespace YTPPlus
         public bool effect9;
         public bool effect10;
         public bool effect11;
+        public bool effect12;
+
+        public int pluginCount = 0;
+        public List<string> plugins = new List<string>();
 
         public bool insertTransitionClips;
 
@@ -44,7 +49,7 @@ namespace YTPPlus
             toolBox.FFMPEG = "ffmpeg";
             toolBox.FFPROBE = "ffprobe";
             toolBox.MAGICK = "magick ";
-            toolBox.TEMP = "temp/" + "job_" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + "/";
+            toolBox.TEMP = "temp/" + "job_" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + "\\";
             Directory.CreateDirectory(toolBox.TEMP);
             toolBox.SOURCES = "sources/";
             toolBox.SOUNDS = "sounds/";
@@ -62,6 +67,10 @@ namespace YTPPlus
             effect9 = true;
             effect10 = true;
             effect11 = true;
+            effect12 = true;
+
+            pluginCount = 0;
+            plugins = new List<string>();
 
             insertTransitionClips = true;
 
@@ -174,7 +183,7 @@ namespace YTPPlus
                         double endOfClip = startOfClip + randomDouble(MIN_STREAM_DURATION, MAX_STREAM_DURATION);
                         Console.WriteLine("Beginning of clip " + i + ": " + startOfClip.ToString("0.#########################", new CultureInfo("en-US")));
                         Console.WriteLine("Ending of clip " + i + ": " + endOfClip.ToString("0.#########################", new CultureInfo("en-US")) + ", in seconds: ");
-                        if (randomInt(0, 15) == 15 && insertTransitionClips == true)
+                        if (randomInt(0, 16 + pluginCount) == 16 && insertTransitionClips == true)
                         {
                             Console.WriteLine("Tryina use a diff source");
                             toolBox.copyVideo(toolBox.SOURCES + effectsFactory.pickSource(), toolBox.TEMP + "video" + i, width, height);
@@ -184,7 +193,8 @@ namespace YTPPlus
                             toolBox.snipVideo(sourceToPick, startOfClip, endOfClip, toolBox.TEMP + "video" + i, width, height);
                         }
                         //Add a random effect to the video
-                        int effect = randomInt(0, 16);
+                        int effect = randomInt(0, 16 + pluginCount);
+                        //int effect = 17;
                         Console.WriteLine("STARTING EFFECT ON CLIP " + i + " EFFECT" + effect);
                         String clipToWorkWith = toolBox.TEMP + "video" + i + ".mp4";
                         switch (effect)
@@ -235,7 +245,18 @@ namespace YTPPlus
                                 if (effect11 == true)
                                     effectsFactory.effect_Squidward(clipToWorkWith, width, height);
                                 break;
+                            case 12:
+                                if (effect12 == true)
+                                    effectsFactory.effect_RainbowTrail(clipToWorkWith, width, height);
+                                break;
                             default:
+                                if (effect > 16)
+                                {
+                                    if (effect <= 16+pluginCount)
+                                    {
+                                        effectsFactory.effect_Plugin(clipToWorkWith, width, height, plugins[rnd.Next(plugins.Count)]);
+                                    }
+                                }
                                 break;
                         }
                     }

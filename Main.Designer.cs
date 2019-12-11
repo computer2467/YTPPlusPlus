@@ -36,19 +36,6 @@
             this.SaveAs = new System.Windows.Forms.Button();
             this.End = new System.Windows.Forms.Button();
             this.Start = new System.Windows.Forms.Button();
-            this.Effects = new System.Windows.Forms.Panel();
-            this.checkBox11 = new System.Windows.Forms.CheckBox();
-            this.checkBox10 = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
-            this.checkBox8 = new System.Windows.Forms.CheckBox();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.EffectsLabel = new System.Windows.Forms.Label();
             this.Settings = new System.Windows.Forms.Panel();
             this.Clips = new System.Windows.Forms.NumericUpDown();
             this.MaxStreamDur = new System.Windows.Forms.NumericUpDown();
@@ -84,6 +71,10 @@
             this.m_view = new System.Windows.Forms.MenuItem();
             this.m_console = new System.Windows.Forms.MenuItem();
             this.m_tools = new System.Windows.Forms.MenuItem();
+            this.overlaydir = new System.Windows.Forms.MenuItem();
+            this.overlay = new System.Windows.Forms.MenuItem();
+            this.setoverlay = new System.Windows.Forms.MenuItem();
+            this.removeoverlay = new System.Windows.Forms.MenuItem();
             this.m_ffmpeg = new System.Windows.Forms.MenuItem();
             this.m_ffprobe = new System.Windows.Forms.MenuItem();
             this.m_magick = new System.Windows.Forms.MenuItem();
@@ -93,6 +84,26 @@
             this.m_resources = new System.Windows.Forms.MenuItem();
             this.m_printconfig = new System.Windows.Forms.MenuItem();
             this.m_reset = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.videoeffects = new System.Windows.Forms.MenuItem();
+            this.effect_Reverse = new System.Windows.Forms.MenuItem();
+            this.speedup = new System.Windows.Forms.MenuItem();
+            this.effect_HighPitch = new System.Windows.Forms.MenuItem();
+            this.effect_SpeedUp = new System.Windows.Forms.MenuItem();
+            this.slowdown = new System.Windows.Forms.MenuItem();
+            this.effect_LowPitch = new System.Windows.Forms.MenuItem();
+            this.effect_SlowDown = new System.Windows.Forms.MenuItem();
+            this.effect_Dance = new System.Windows.Forms.MenuItem();
+            this.effect_Squidward = new System.Windows.Forms.MenuItem();
+            this.effect_RainbowTrail = new System.Windows.Forms.MenuItem();
+            this.audioeffects = new System.Windows.Forms.MenuItem();
+            this.randomsound = new System.Windows.Forms.MenuItem();
+            this.effect_RandomSound = new System.Windows.Forms.MenuItem();
+            this.effect_RandomSoundMute = new System.Windows.Forms.MenuItem();
+            this.effect_Chorus = new System.Windows.Forms.MenuItem();
+            this.effect_Vibrato = new System.Windows.Forms.MenuItem();
+            this.plugins = new System.Windows.Forms.MenuItem();
+            this.noPlugins = new System.Windows.Forms.MenuItem();
             this.m_help = new System.Windows.Forms.MenuItem();
             this.m_helpeffects = new System.Windows.Forms.MenuItem();
             this.m_helpconfigure = new System.Windows.Forms.MenuItem();
@@ -109,7 +120,6 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserVLC = new System.Windows.Forms.FolderBrowserDialog();
             this.Video.SuspendLayout();
-            this.Effects.SuspendLayout();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Clips)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxStreamDur)).BeginInit();
@@ -200,183 +210,6 @@
             this.Start.Text = "|<";
             this.Start.UseVisualStyleBackColor = false;
             this.Start.Click += new System.EventHandler(this.Start_Click);
-            // 
-            // Effects
-            // 
-            this.Effects.AccessibleDescription = "Generated Video";
-            this.Effects.AccessibleName = "Video Container";
-            this.Effects.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.Effects.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Effects.Controls.Add(this.checkBox11);
-            this.Effects.Controls.Add(this.checkBox10);
-            this.Effects.Controls.Add(this.checkBox5);
-            this.Effects.Controls.Add(this.checkBox9);
-            this.Effects.Controls.Add(this.checkBox8);
-            this.Effects.Controls.Add(this.checkBox7);
-            this.Effects.Controls.Add(this.checkBox6);
-            this.Effects.Controls.Add(this.checkBox4);
-            this.Effects.Controls.Add(this.checkBox3);
-            this.Effects.Controls.Add(this.checkBox2);
-            this.Effects.Controls.Add(this.checkBox1);
-            this.Effects.Controls.Add(this.EffectsLabel);
-            this.Effects.Location = new System.Drawing.Point(338, 12);
-            this.Effects.Name = "Effects";
-            this.Effects.Size = new System.Drawing.Size(211, 288);
-            this.Effects.TabIndex = 6;
-            // 
-            // checkBox11
-            // 
-            this.checkBox11.AutoSize = true;
-            this.checkBox11.Checked = true;
-            this.checkBox11.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox11.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox11.Location = new System.Drawing.Point(23, 257);
-            this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(82, 17);
-            this.checkBox11.TabIndex = 21;
-            this.checkBox11.Text = "Squidward";
-            this.checkBox11.UseVisualStyleBackColor = true;
-            // 
-            // checkBox10
-            // 
-            this.checkBox10.AutoSize = true;
-            this.checkBox10.Checked = true;
-            this.checkBox10.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox10.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox10.Location = new System.Drawing.Point(23, 234);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(58, 17);
-            this.checkBox10.TabIndex = 20;
-            this.checkBox10.Text = "Dance";
-            this.checkBox10.UseVisualStyleBackColor = true;
-            // 
-            // checkBox5
-            // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Checked = true;
-            this.checkBox5.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox5.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox5.Location = new System.Drawing.Point(23, 119);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(160, 17);
-            this.checkBox5.TabIndex = 15;
-            this.checkBox5.Text = "Slow Down Clip (No Pitch)";
-            this.checkBox5.UseVisualStyleBackColor = true;
-            // 
-            // checkBox9
-            // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.Checked = true;
-            this.checkBox9.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox9.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox9.Location = new System.Drawing.Point(23, 211);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(142, 17);
-            this.checkBox9.TabIndex = 19;
-            this.checkBox9.Text = "Slow Down Clip (Pitch)";
-            this.checkBox9.UseVisualStyleBackColor = true;
-            // 
-            // checkBox8
-            // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.Checked = true;
-            this.checkBox8.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox8.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox8.Location = new System.Drawing.Point(23, 188);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(133, 17);
-            this.checkBox8.TabIndex = 18;
-            this.checkBox8.Text = "Speed Up Clip (Pitch)";
-            this.checkBox8.UseVisualStyleBackColor = true;
-            // 
-            // checkBox7
-            // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.Checked = true;
-            this.checkBox7.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox7.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox7.Location = new System.Drawing.Point(23, 165);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(98, 17);
-            this.checkBox7.TabIndex = 17;
-            this.checkBox7.Text = "Vibrato Audio";
-            this.checkBox7.UseVisualStyleBackColor = true;
-            // 
-            // checkBox6
-            // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.Checked = true;
-            this.checkBox6.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox6.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox6.Location = new System.Drawing.Point(23, 142);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(97, 17);
-            this.checkBox6.TabIndex = 16;
-            this.checkBox6.Text = "Chorus Audio";
-            this.checkBox6.UseVisualStyleBackColor = true;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Checked = true;
-            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox4.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox4.Location = new System.Drawing.Point(23, 96);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(151, 17);
-            this.checkBox4.TabIndex = 14;
-            this.checkBox4.Text = "Speed Up Clip (No Pitch)";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Checked = true;
-            this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox3.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox3.Location = new System.Drawing.Point(23, 73);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(88, 17);
-            this.checkBox3.TabIndex = 13;
-            this.checkBox3.Text = "Reverse Clip";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox2.Location = new System.Drawing.Point(23, 50);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(162, 17);
-            this.checkBox2.TabIndex = 12;
-            this.checkBox2.Text = "Random Sound (Mute OG)";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(23, 27);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(106, 17);
-            this.checkBox1.TabIndex = 11;
-            this.checkBox1.Text = "Random Sound";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // EffectsLabel
-            // 
-            this.EffectsLabel.AutoSize = true;
-            this.EffectsLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EffectsLabel.Location = new System.Drawing.Point(39, -1);
-            this.EffectsLabel.Name = "EffectsLabel";
-            this.EffectsLabel.Size = new System.Drawing.Size(128, 25);
-            this.EffectsLabel.TabIndex = 0;
-            this.EffectsLabel.Text = "Effect Toggles";
-            this.EffectsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Settings
             // 
@@ -662,9 +495,9 @@
             this.Materials.Controls.Add(this.AddMaterial);
             this.Materials.Controls.Add(this.ClearMaterial);
             this.Materials.Controls.Add(this.MaterialLabel);
-            this.Materials.Location = new System.Drawing.Point(555, 13);
+            this.Materials.Location = new System.Drawing.Point(339, 8);
             this.Materials.Name = "Materials";
-            this.Materials.Size = new System.Drawing.Size(210, 438);
+            this.Materials.Size = new System.Drawing.Size(210, 292);
             this.Materials.TabIndex = 15;
             // 
             // Material
@@ -673,13 +506,13 @@
             this.Material.Location = new System.Drawing.Point(4, 26);
             this.Material.Name = "Material";
             this.Material.ReadOnly = true;
-            this.Material.Size = new System.Drawing.Size(200, 368);
+            this.Material.Size = new System.Drawing.Size(200, 220);
             this.Material.TabIndex = 28;
             this.Material.Text = "";
             // 
             // AddMaterial
             // 
-            this.AddMaterial.Location = new System.Drawing.Point(3, 400);
+            this.AddMaterial.Location = new System.Drawing.Point(3, 252);
             this.AddMaterial.Name = "AddMaterial";
             this.AddMaterial.Size = new System.Drawing.Size(100, 32);
             this.AddMaterial.TabIndex = 29;
@@ -689,7 +522,7 @@
             // 
             // ClearMaterial
             // 
-            this.ClearMaterial.Location = new System.Drawing.Point(109, 400);
+            this.ClearMaterial.Location = new System.Drawing.Point(109, 252);
             this.ClearMaterial.Name = "ClearMaterial";
             this.ClearMaterial.Size = new System.Drawing.Size(95, 32);
             this.ClearMaterial.TabIndex = 30;
@@ -715,6 +548,7 @@
             this.m_edit,
             this.m_view,
             this.m_tools,
+            this.menuItem1,
             this.m_help});
             // 
             // m_file
@@ -782,6 +616,7 @@
             // 
             this.m_tools.Index = 3;
             this.m_tools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.overlaydir,
             this.m_ffmpeg,
             this.m_ffprobe,
             this.m_magick,
@@ -794,64 +629,240 @@
             this.m_tools.ShowShortcut = false;
             this.m_tools.Text = "Tools";
             // 
+            // overlaydir
+            // 
+            this.overlaydir.Index = 0;
+            this.overlaydir.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.overlay,
+            this.setoverlay,
+            this.removeoverlay});
+            this.overlaydir.Text = "Overlay directory";
+            // 
+            // overlay
+            // 
+            this.overlay.Enabled = false;
+            this.overlay.Index = 0;
+            this.overlay.Text = "No overlay directory";
+            // 
+            // setoverlay
+            // 
+            this.setoverlay.Index = 1;
+            this.setoverlay.Text = "Set overlay directory";
+            // 
+            // removeoverlay
+            // 
+            this.removeoverlay.Index = 2;
+            this.removeoverlay.Text = "Remove overlay directory";
+            // 
             // m_ffmpeg
             // 
-            this.m_ffmpeg.Index = 0;
+            this.m_ffmpeg.Index = 1;
             this.m_ffmpeg.Text = "Set ffmpeg.exe";
             this.m_ffmpeg.Click += new System.EventHandler(this.m_ffmpeg_Click);
             // 
             // m_ffprobe
             // 
-            this.m_ffprobe.Index = 1;
+            this.m_ffprobe.Index = 2;
             this.m_ffprobe.Text = "Set ffprobe.exe";
             this.m_ffprobe.Click += new System.EventHandler(this.m_ffprobe_Click);
             // 
             // m_magick
             // 
-            this.m_magick.Index = 2;
+            this.m_magick.Index = 3;
             this.m_magick.Text = "Set magick.exe";
             this.m_magick.Click += new System.EventHandler(this.m_magick_Click);
             // 
             // m_temp
             // 
-            this.m_temp.Index = 3;
+            this.m_temp.Index = 4;
             this.m_temp.Text = "Set temp/ folder";
             this.m_temp.Click += new System.EventHandler(this.m_temp_Click);
             // 
             // m_sounds
             // 
-            this.m_sounds.Index = 4;
+            this.m_sounds.Index = 5;
             this.m_sounds.Text = "Set sounds/ folder";
             this.m_sounds.Click += new System.EventHandler(this.m_sounds_Click);
             // 
             // m_music
             // 
-            this.m_music.Index = 5;
+            this.m_music.Index = 6;
             this.m_music.Text = "Set music/ folder";
             this.m_music.Click += new System.EventHandler(this.m_music_Click);
             // 
             // m_resources
             // 
-            this.m_resources.Index = 6;
+            this.m_resources.Index = 7;
             this.m_resources.Text = "Set resources/ folder";
             this.m_resources.Click += new System.EventHandler(this.m_resources_Click);
             // 
             // m_printconfig
             // 
-            this.m_printconfig.Index = 7;
+            this.m_printconfig.Index = 8;
             this.m_printconfig.Text = "Print current config";
             this.m_printconfig.Click += new System.EventHandler(this.m_printconfig_Click);
             // 
             // m_reset
             // 
-            this.m_reset.Index = 8;
+            this.m_reset.Index = 9;
             this.m_reset.Shortcut = System.Windows.Forms.Shortcut.F10;
             this.m_reset.Text = "Reset all";
             this.m_reset.Click += new System.EventHandler(this.m_reset_Click);
             // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 4;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.videoeffects,
+            this.audioeffects,
+            this.plugins});
+            this.menuItem1.Text = "Effects";
+            // 
+            // videoeffects
+            // 
+            this.videoeffects.Index = 0;
+            this.videoeffects.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.effect_Reverse,
+            this.speedup,
+            this.slowdown,
+            this.effect_Dance,
+            this.effect_Squidward,
+            this.effect_RainbowTrail});
+            this.videoeffects.Text = "Video Effects";
+            // 
+            // effect_Reverse
+            // 
+            this.effect_Reverse.Checked = true;
+            this.effect_Reverse.Index = 0;
+            this.effect_Reverse.Text = "Reverse Clip";
+            this.effect_Reverse.Click += new System.EventHandler(this.effect_Reverse_Click);
+            // 
+            // speedup
+            // 
+            this.speedup.Index = 1;
+            this.speedup.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.effect_HighPitch,
+            this.effect_SpeedUp});
+            this.speedup.Text = "Speed Up Clip";
+            // 
+            // effect_HighPitch
+            // 
+            this.effect_HighPitch.Checked = true;
+            this.effect_HighPitch.Index = 0;
+            this.effect_HighPitch.Text = "Pitched";
+            this.effect_HighPitch.Click += new System.EventHandler(this.effect_HighPitch_Click);
+            // 
+            // effect_SpeedUp
+            // 
+            this.effect_SpeedUp.Checked = true;
+            this.effect_SpeedUp.Index = 1;
+            this.effect_SpeedUp.Text = "No Pitch";
+            this.effect_SpeedUp.Click += new System.EventHandler(this.effect_SpeedUp_Click);
+            // 
+            // slowdown
+            // 
+            this.slowdown.Index = 2;
+            this.slowdown.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.effect_LowPitch,
+            this.effect_SlowDown});
+            this.slowdown.Text = "Slow Down Clip";
+            // 
+            // effect_LowPitch
+            // 
+            this.effect_LowPitch.Checked = true;
+            this.effect_LowPitch.Index = 0;
+            this.effect_LowPitch.Text = "Pitched";
+            this.effect_LowPitch.Click += new System.EventHandler(this.effect_LowPitch_Click);
+            // 
+            // effect_SlowDown
+            // 
+            this.effect_SlowDown.Checked = true;
+            this.effect_SlowDown.Index = 1;
+            this.effect_SlowDown.Text = "No Pitch";
+            this.effect_SlowDown.Click += new System.EventHandler(this.effect_SlowDown_Click);
+            // 
+            // effect_Dance
+            // 
+            this.effect_Dance.Checked = true;
+            this.effect_Dance.Index = 3;
+            this.effect_Dance.Text = "Dance";
+            this.effect_Dance.Click += new System.EventHandler(this.effect_Dance_Click);
+            // 
+            // effect_Squidward
+            // 
+            this.effect_Squidward.Checked = true;
+            this.effect_Squidward.Index = 4;
+            this.effect_Squidward.Text = "Squidward";
+            this.effect_Squidward.Click += new System.EventHandler(this.effect_Squidward_Click);
+            // 
+            // effect_RainbowTrail
+            // 
+            this.effect_RainbowTrail.Checked = true;
+            this.effect_RainbowTrail.Index = 5;
+            this.effect_RainbowTrail.Text = "Rainbow Trail";
+            this.effect_RainbowTrail.Click += new System.EventHandler(this.effect_RainbowTrail_Click);
+            // 
+            // audioeffects
+            // 
+            this.audioeffects.Index = 1;
+            this.audioeffects.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.randomsound,
+            this.effect_Chorus,
+            this.effect_Vibrato});
+            this.audioeffects.Text = "Audio Effects";
+            // 
+            // randomsound
+            // 
+            this.randomsound.Index = 0;
+            this.randomsound.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.effect_RandomSound,
+            this.effect_RandomSoundMute});
+            this.randomsound.Text = "Random Sound";
+            // 
+            // effect_RandomSound
+            // 
+            this.effect_RandomSound.Checked = true;
+            this.effect_RandomSound.Index = 0;
+            this.effect_RandomSound.Text = "Keep OG sound";
+            this.effect_RandomSound.Click += new System.EventHandler(this.effect_RandomSound_Click);
+            // 
+            // effect_RandomSoundMute
+            // 
+            this.effect_RandomSoundMute.Checked = true;
+            this.effect_RandomSoundMute.Index = 1;
+            this.effect_RandomSoundMute.Text = "Mute OG sound";
+            this.effect_RandomSoundMute.Click += new System.EventHandler(this.effect_RandomSoundMute_Click);
+            // 
+            // effect_Chorus
+            // 
+            this.effect_Chorus.Checked = true;
+            this.effect_Chorus.Index = 1;
+            this.effect_Chorus.Text = "Chorus Audio";
+            this.effect_Chorus.Click += new System.EventHandler(this.effect_Chorus_Click);
+            // 
+            // effect_Vibrato
+            // 
+            this.effect_Vibrato.Checked = true;
+            this.effect_Vibrato.Index = 2;
+            this.effect_Vibrato.Text = "Vibrato Audio";
+            this.effect_Vibrato.Click += new System.EventHandler(this.effect_Vibrato_Click);
+            // 
+            // plugins
+            // 
+            this.plugins.Index = 2;
+            this.plugins.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.noPlugins});
+            this.plugins.Text = "Plugins";
+            // 
+            // noPlugins
+            // 
+            this.noPlugins.Enabled = false;
+            this.noPlugins.Index = 0;
+            this.noPlugins.Text = "No plugins found";
+            // 
             // m_help
             // 
-            this.m_help.Index = 4;
+            this.m_help.Index = 5;
             this.m_help.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.m_helpeffects,
             this.m_helpconfigure,
@@ -887,6 +898,7 @@
             // 
             // folderBrowserTemp
             // 
+            this.folderBrowserTemp.Description = "Select a directory to be used for temporary files.";
             this.folderBrowserTemp.SelectedPath = "temp/";
             // 
             // openFileDialogMagick
@@ -897,14 +909,19 @@
             // 
             // folderBrowserSounds
             // 
+            this.folderBrowserSounds.Description = "Select a directory to be used for sound effects (Folders must contain *.mp3 files" +
+    ")";
             this.folderBrowserSounds.SelectedPath = "sounds/";
             // 
             // folderBrowserMusic
             // 
+            this.folderBrowserMusic.Description = "Select a directory to be used for music (Folders must contain *.mp3 files)";
             this.folderBrowserMusic.SelectedPath = "music/";
             // 
             // folderBrowserResources
             // 
+            this.folderBrowserResources.Description = "Select a directory to be used for resources (Please copy all files from the origi" +
+    "nal resources over)";
             this.folderBrowserResources.SelectedPath = "resources/";
             // 
             // openFileDialogSource
@@ -939,26 +956,23 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(777, 466);
+            this.ClientSize = new System.Drawing.Size(562, 466);
             this.Controls.Add(this.Materials);
             this.Controls.Add(this.RenderSettings);
             this.Controls.Add(this.Settings);
-            this.Controls.Add(this.Effects);
             this.Controls.Add(this.Video);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(793, 526);
+            this.MaximumSize = new System.Drawing.Size(578, 526);
             this.Menu = this.mainMenu1;
-            this.MinimumSize = new System.Drawing.Size(793, 526);
+            this.MinimumSize = new System.Drawing.Size(578, 526);
             this.Name = "YTPPlusPlus";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "YTP++";
+            this.Text = "YTP++ [v2.0]";
             this.Video.ResumeLayout(false);
-            this.Effects.ResumeLayout(false);
-            this.Effects.PerformLayout();
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Clips)).EndInit();
@@ -981,20 +995,7 @@
         private System.Windows.Forms.Button End;
         private System.Windows.Forms.Button Render;
         private System.Windows.Forms.Button SaveAs;
-        private System.Windows.Forms.Panel Effects;
         private System.Windows.Forms.Panel Settings;
-        private System.Windows.Forms.CheckBox checkBox9;
-        private System.Windows.Forms.CheckBox checkBox8;
-        private System.Windows.Forms.CheckBox checkBox7;
-        private System.Windows.Forms.CheckBox checkBox6;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Label EffectsLabel;
-        private System.Windows.Forms.CheckBox checkBox11;
-        private System.Windows.Forms.CheckBox checkBox10;
-        private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label ClipCountLabel;
         private System.Windows.Forms.Label MaxStreamLabel;
@@ -1053,6 +1054,30 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.MenuItem m_printconfig;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserVLC;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem videoeffects;
+        private System.Windows.Forms.MenuItem effect_Reverse;
+        private System.Windows.Forms.MenuItem speedup;
+        private System.Windows.Forms.MenuItem effect_HighPitch;
+        private System.Windows.Forms.MenuItem effect_SpeedUp;
+        private System.Windows.Forms.MenuItem slowdown;
+        private System.Windows.Forms.MenuItem effect_LowPitch;
+        private System.Windows.Forms.MenuItem effect_SlowDown;
+        private System.Windows.Forms.MenuItem effect_Dance;
+        private System.Windows.Forms.MenuItem effect_Squidward;
+        private System.Windows.Forms.MenuItem audioeffects;
+        private System.Windows.Forms.MenuItem plugins;
+        private System.Windows.Forms.MenuItem randomsound;
+        private System.Windows.Forms.MenuItem effect_RandomSound;
+        private System.Windows.Forms.MenuItem effect_RandomSoundMute;
+        private System.Windows.Forms.MenuItem effect_Chorus;
+        private System.Windows.Forms.MenuItem effect_Vibrato;
+        private System.Windows.Forms.MenuItem noPlugins;
+        private System.Windows.Forms.MenuItem overlaydir;
+        private System.Windows.Forms.MenuItem overlay;
+        private System.Windows.Forms.MenuItem setoverlay;
+        private System.Windows.Forms.MenuItem removeoverlay;
+        private System.Windows.Forms.MenuItem effect_RainbowTrail;
     }
 }
 

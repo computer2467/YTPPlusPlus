@@ -48,7 +48,7 @@ namespace YTPPlus
         /* EFFECTS */
         public void effect_RandomSound(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_RandomSound initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -109,7 +109,7 @@ namespace YTPPlus
 
         public void effect_RandomSoundMute(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_RandomSoundMute initiated");
             try
             {
                 string randomSound = pickSound();
@@ -208,7 +208,7 @@ namespace YTPPlus
 
         public void effect_Reverse(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_Reverse initiated");
             try
             {
                 string randomSound = pickSound();
@@ -304,7 +304,7 @@ namespace YTPPlus
         }
         public void effect_SpeedUp(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_SpeedUp initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -357,7 +357,7 @@ namespace YTPPlus
 
         public void effect_SlowDown(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_SlowDown initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -410,7 +410,7 @@ namespace YTPPlus
 
         public void effect_Chorus(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_Chorus initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -463,7 +463,7 @@ namespace YTPPlus
 
         public void effect_Vibrato(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_Vibrato initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -516,7 +516,7 @@ namespace YTPPlus
 
         public void effect_LowPitch(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_LowPitch initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -569,7 +569,7 @@ namespace YTPPlus
 
         public void effect_HighPitch(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_HighPitch initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -622,7 +622,7 @@ namespace YTPPlus
 
         public void effect_Dance(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_Dance initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -757,7 +757,7 @@ namespace YTPPlus
 
         public void effect_Squidward(string video, int width, int height)
         {
-            Console.WriteLine("effect" + " initiated");
+            Console.WriteLine("effect_Squidward initiated");
             try
             {
                 FileInfo inVid = new FileInfo(video);
@@ -922,6 +922,98 @@ namespace YTPPlus
             }
             catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
         }
+        public void effect_RainbowTrail(string video, int width, int height)
+        {
+            Console.WriteLine("effect_RainbowTrail initiated");
+            try
+            {
+                FileInfo inVid = new FileInfo(video);
+                string temp = toolBox.TEMP + "temp.mp4";
+                if (File.Exists(video))
+                {
+                    File.Delete(temp);
+                    inVid.MoveTo(temp);
+                }
+
+                string randomSound = pickSound();
+
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = toolBox.FFMPEG;
+                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
+                        + " -ar 44100"
+                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
+                        + " -filter:v setpts=2*PTS -af asetrate=44100*0.5,aresample=44100 -y " + video;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                process.StartInfo = startInfo;
+                process.Start();
+                // Read stderr synchronously (on another thread)
+
+                string errorText = null;
+                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                stderrThread.Start();
+
+                // Read stdout synchronously (on this thread)
+
+                while (true)
+                {
+                    var line = process.StandardOutput.ReadLine();
+                    if (line == null)
+                        break;
+
+                    Console.WriteLine(line);
+                }
+
+                process.WaitForExit();
+                stderrThread.Join();
+
+                int exitValue = process.ExitCode;
+                File.Delete(temp);
+            }
+            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+        }
+
+        public void effect_Plugin(string video, int width, int height, string plugin)
+        {
+            Console.WriteLine(plugin+" initiated");
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = plugin;
+                startInfo.Arguments = video + " " + width + " " + height + " " + toolBox.TEMP + " " + toolBox.FFMPEG + " " + toolBox.FFPROBE + " " + toolBox.MAGICK + " " + toolBox.RESOURCES + " " + toolBox.SOUNDS + " " + toolBox.SOURCES + " " + toolBox.MUSIC;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                process.StartInfo = startInfo;
+                process.Start();
+                // Read stderr synchronously (on another thread)
+
+                string errorText = null;
+                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                stderrThread.Start();
+
+                // Read stdout synchronously (on this thread)
+
+                while (true)
+                {
+                    var line = process.StandardOutput.ReadLine();
+                    if (line == null)
+                        break;
+
+                    Console.WriteLine(line);
+                }
+
+                process.WaitForExit();
+                stderrThread.Join();
+
+                int exitValue = process.ExitCode;
+            }
+            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+        }
+
         public int randomInt(int min, int max)
         {
             return rnd.Next((max - min) + 1) + min;
