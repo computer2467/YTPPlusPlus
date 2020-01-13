@@ -31,6 +31,7 @@ namespace YTPPlus
         public bool effect11;
         public bool effect12;
 
+        public bool pluginTest = false;
         public int pluginCount = 0;
         public List<string> plugins = new List<string>();
 
@@ -69,6 +70,7 @@ namespace YTPPlus
             effect11 = true;
             effect12 = true;
 
+            pluginTest = false;
             pluginCount = 0;
             plugins = new List<string>();
 
@@ -183,7 +185,7 @@ namespace YTPPlus
                         double endOfClip = startOfClip + randomDouble(MIN_STREAM_DURATION, MAX_STREAM_DURATION);
                         Console.WriteLine("Beginning of clip " + i + ": " + startOfClip.ToString("0.#########################", new CultureInfo("en-US")));
                         Console.WriteLine("Ending of clip " + i + ": " + endOfClip.ToString("0.#########################", new CultureInfo("en-US")) + ", in seconds: ");
-                        if (randomInt(0, 16 + pluginCount) == 16 && insertTransitionClips == true)
+                        if (randomInt(0, 15 + pluginCount) == 15 && insertTransitionClips == true)
                         {
                             Console.WriteLine("Tryina use a diff source");
                             toolBox.copyVideo(toolBox.SOURCES + effectsFactory.pickSource(), toolBox.TEMP + "video" + i, width, height);
@@ -193,8 +195,9 @@ namespace YTPPlus
                             toolBox.snipVideo(sourceToPick, startOfClip, endOfClip, toolBox.TEMP + "video" + i, width, height);
                         }
                         //Add a random effect to the video
-                        int effect = randomInt(0, 16 + pluginCount);
-                        //int effect = 17;
+                        int effect = giveProbability(0, 15 + pluginCount);
+                        if (pluginTest)
+                            effect = 16;
                         Console.WriteLine("STARTING EFFECT ON CLIP " + i + " EFFECT" + effect);
                         String clipToWorkWith = toolBox.TEMP + "video" + i + ".mp4";
                         switch (effect)
@@ -245,16 +248,18 @@ namespace YTPPlus
                                 if (effect11 == true)
                                     effectsFactory.effect_Squidward(clipToWorkWith, width, height);
                                 break;
-                            case 12:
+                            /*case 12:
                                 if (effect12 == true)
-                                    effectsFactory.effect_RainbowTrail(clipToWorkWith, width, height);
-                                break;
-                            default:
-                                if (effect > 16)
                                 {
-                                    if (effect <= 16+pluginCount)
+                                    effectsFactory.effect_RainbowTrail(clipToWorkWith, width, height, startOfClip, endOfClip);
+                                }
+                                break;*/
+                            default:
+                                if (effect > 15)
+                                {
+                                    if (effect <= 15+pluginCount)
                                     {
-                                        effectsFactory.effect_Plugin(clipToWorkWith, width, height, plugins[rnd.Next(plugins.Count)]);
+                                        effectsFactory.effect_Plugin(clipToWorkWith, width, height, plugins[rnd.Next(plugins.Count)], startOfClip, endOfClip);
                                     }
                                 }
                                 break;
@@ -351,6 +356,28 @@ namespace YTPPlus
         }
         public int randomInt(int min, int max)
         {
+            return rnd.Next((max - min) + 1) + min;
+            //return new Random((int)GetUnixEpoch(DateTime.UtcNow)).Next((max - min) + 1) + min;
+        }
+        public int giveProbability(int min, int max) //still unfinished
+        {
+            /*
+            int roll = rnd.Next(0,1);
+            float[] array = new float[max];
+            for (int i = min; i < max; i++)
+            {
+                array.SetValue(0.1666F, i);
+            }
+            float sum = 0;
+            int completedRoll = 0;
+            for (int i = 0; i < 6; i++)
+            {
+                sum += array[i];
+                if (sum > roll) break;
+                completedRoll = i;
+            }
+            Console.WriteLine(completedRoll);*/
+            //return completedRoll;
             return rnd.Next((max - min) + 1) + min;
             //return new Random((int)GetUnixEpoch(DateTime.UtcNow)).Next((max - min) + 1) + min;
         }

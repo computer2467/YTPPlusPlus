@@ -70,21 +70,76 @@
             this.m_saveas = new System.Windows.Forms.MenuItem();
             this.m_view = new System.Windows.Forms.MenuItem();
             this.m_console = new System.Windows.Forms.MenuItem();
+            this.themes = new System.Windows.Forms.MenuItem();
+            this.theme_dark = new System.Windows.Forms.MenuItem();
+            this.theme_light = new System.Windows.Forms.MenuItem();
+            this.theme_customedit = new System.Windows.Forms.MenuItem();
+            this.notimplemented = new System.Windows.Forms.MenuItem();
+            this.theme_foreground = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_video = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_video_dark = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_video_light = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_material = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_material_dark = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_material_light = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_streamsettings = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_streamsettings_dark = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_streamsettings_light = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_rendersettings = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_rendersettings_dark = new System.Windows.Forms.MenuItem();
+            this.theme_foreground_rendersettings_light = new System.Windows.Forms.MenuItem();
+            this.theme_background = new System.Windows.Forms.MenuItem();
+            this.theme_background_ytpplusplus = new System.Windows.Forms.MenuItem();
+            this.theme_background_ytpplusplus_dark = new System.Windows.Forms.MenuItem();
+            this.theme_background_ytpplusplus_light = new System.Windows.Forms.MenuItem();
+            this.theme_background_materiallist = new System.Windows.Forms.MenuItem();
+            this.theme_background_materiallist_dark = new System.Windows.Forms.MenuItem();
+            this.theme_background_materiallist_light = new System.Windows.Forms.MenuItem();
+            this.theme_labels = new System.Windows.Forms.MenuItem();
+            this.theme_labels_dark = new System.Windows.Forms.MenuItem();
+            this.theme_labels_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_render = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_render_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_render_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_beginning = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_beginning_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_beginning_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_playpause = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_playpause_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_playpause_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_end = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_end_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_end_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_saveas = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_saveas_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_saveas_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_addmp4 = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_addmp4_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_addmp4_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_clear = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_clear_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_clear_light = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_progress = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_progress_dark = new System.Windows.Forms.MenuItem();
+            this.theme_buttons_progress_light = new System.Windows.Forms.MenuItem();
+            this.theme_textboxes = new System.Windows.Forms.MenuItem();
+            this.theme_textboxes_dark = new System.Windows.Forms.MenuItem();
+            this.theme_textboxes_light = new System.Windows.Forms.MenuItem();
             this.m_tools = new System.Windows.Forms.MenuItem();
-            this.overlaydir = new System.Windows.Forms.MenuItem();
-            this.overlay = new System.Windows.Forms.MenuItem();
-            this.setoverlay = new System.Windows.Forms.MenuItem();
-            this.removeoverlay = new System.Windows.Forms.MenuItem();
+            this.pluginTest = new System.Windows.Forms.MenuItem();
+            this.executables = new System.Windows.Forms.MenuItem();
             this.m_ffmpeg = new System.Windows.Forms.MenuItem();
             this.m_ffprobe = new System.Windows.Forms.MenuItem();
             this.m_magick = new System.Windows.Forms.MenuItem();
+            this.folders = new System.Windows.Forms.MenuItem();
             this.m_temp = new System.Windows.Forms.MenuItem();
             this.m_sounds = new System.Windows.Forms.MenuItem();
             this.m_music = new System.Windows.Forms.MenuItem();
             this.m_resources = new System.Windows.Forms.MenuItem();
-            this.m_printconfig = new System.Windows.Forms.MenuItem();
             this.m_reset = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.m_printconfig = new System.Windows.Forms.MenuItem();
+            this.m_effects = new System.Windows.Forms.MenuItem();
             this.videoeffects = new System.Windows.Forms.MenuItem();
             this.effect_Reverse = new System.Windows.Forms.MenuItem();
             this.speedup = new System.Windows.Forms.MenuItem();
@@ -95,7 +150,6 @@
             this.effect_SlowDown = new System.Windows.Forms.MenuItem();
             this.effect_Dance = new System.Windows.Forms.MenuItem();
             this.effect_Squidward = new System.Windows.Forms.MenuItem();
-            this.effect_RainbowTrail = new System.Windows.Forms.MenuItem();
             this.audioeffects = new System.Windows.Forms.MenuItem();
             this.randomsound = new System.Windows.Forms.MenuItem();
             this.effect_RandomSound = new System.Windows.Forms.MenuItem();
@@ -119,6 +173,7 @@
             this.openFileDialogFFProbe = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserVLC = new System.Windows.Forms.FolderBrowserDialog();
+            this.theme_custom = new System.Windows.Forms.MenuItem();
             this.Video.SuspendLayout();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Clips)).BeginInit();
@@ -181,7 +236,7 @@
             this.SaveAs.Name = "SaveAs";
             this.SaveAs.Size = new System.Drawing.Size(88, 38);
             this.SaveAs.TabIndex = 5;
-            this.SaveAs.Text = "Save As...";
+            this.SaveAs.Text = "Save as...";
             this.SaveAs.UseVisualStyleBackColor = false;
             this.SaveAs.Click += new System.EventHandler(this.SaveAs_Click);
             // 
@@ -495,9 +550,9 @@
             this.Materials.Controls.Add(this.AddMaterial);
             this.Materials.Controls.Add(this.ClearMaterial);
             this.Materials.Controls.Add(this.MaterialLabel);
-            this.Materials.Location = new System.Drawing.Point(339, 8);
+            this.Materials.Location = new System.Drawing.Point(339, 12);
             this.Materials.Name = "Materials";
-            this.Materials.Size = new System.Drawing.Size(210, 292);
+            this.Materials.Size = new System.Drawing.Size(210, 288);
             this.Materials.TabIndex = 15;
             // 
             // Material
@@ -548,7 +603,7 @@
             this.m_edit,
             this.m_view,
             this.m_tools,
-            this.menuItem1,
+            this.m_effects,
             this.m_help});
             // 
             // m_file
@@ -564,14 +619,14 @@
             // 
             this.m_addmaterial.Index = 0;
             this.m_addmaterial.Shortcut = System.Windows.Forms.Shortcut.F5;
-            this.m_addmaterial.Text = "Add Material";
+            this.m_addmaterial.Text = "Add material";
             this.m_addmaterial.Click += new System.EventHandler(this.m_addmaterial_Click);
             // 
             // m_clearmaterials
             // 
             this.m_clearmaterials.Index = 1;
             this.m_clearmaterials.Shortcut = System.Windows.Forms.Shortcut.F12;
-            this.m_clearmaterials.Text = "Clear Materials";
+            this.m_clearmaterials.Text = "Clear materials";
             this.m_clearmaterials.Click += new System.EventHandler(this.m_clearmaterials_Click);
             // 
             // m_edit
@@ -594,14 +649,15 @@
             // 
             this.m_saveas.Index = 1;
             this.m_saveas.Shortcut = System.Windows.Forms.Shortcut.F3;
-            this.m_saveas.Text = "Save As...";
+            this.m_saveas.Text = "Save as...";
             this.m_saveas.Click += new System.EventHandler(this.m_saveas_Click);
             // 
             // m_view
             // 
             this.m_view.Index = 2;
             this.m_view.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.m_console});
+            this.m_console,
+            this.themes});
             this.m_view.ShowShortcut = false;
             this.m_view.Text = "View";
             // 
@@ -609,114 +665,521 @@
             // 
             this.m_console.Index = 0;
             this.m_console.Shortcut = System.Windows.Forms.Shortcut.F4;
-            this.m_console.Text = "Show Console";
+            this.m_console.Text = "Show console";
             this.m_console.Click += new System.EventHandler(this.m_console_Click);
+            // 
+            // themes
+            // 
+            this.themes.Index = 1;
+            this.themes.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_dark,
+            this.theme_light,
+            this.theme_custom,
+            this.theme_customedit});
+            this.themes.Text = "Color scheme";
+            // 
+            // theme_dark
+            // 
+            this.theme_dark.Checked = true;
+            this.theme_dark.Index = 0;
+            this.theme_dark.RadioCheck = true;
+            this.theme_dark.Text = "Dark";
+            this.theme_dark.Click += new System.EventHandler(this.theme_dark_Click);
+            // 
+            // theme_light
+            // 
+            this.theme_light.Index = 1;
+            this.theme_light.RadioCheck = true;
+            this.theme_light.Text = "Light";
+            this.theme_light.Click += new System.EventHandler(this.theme_light_Click);
+            // 
+            // theme_customedit
+            // 
+            this.theme_customedit.Enabled = false;
+            this.theme_customedit.Index = 3;
+            this.theme_customedit.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.notimplemented,
+            this.theme_foreground,
+            this.theme_background,
+            this.theme_labels,
+            this.theme_buttons,
+            this.theme_textboxes});
+            this.theme_customedit.RadioCheck = true;
+            this.theme_customedit.Text = "Edit custom";
+            // 
+            // notimplemented
+            // 
+            this.notimplemented.Index = 0;
+            this.notimplemented.Text = "NOT IMPLEMENTED";
+            // 
+            // theme_foreground
+            // 
+            this.theme_foreground.Index = 1;
+            this.theme_foreground.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_foreground_video,
+            this.theme_foreground_material,
+            this.theme_foreground_streamsettings,
+            this.theme_foreground_rendersettings});
+            this.theme_foreground.Text = "Foreground";
+            // 
+            // theme_foreground_video
+            // 
+            this.theme_foreground_video.Index = 0;
+            this.theme_foreground_video.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_foreground_video_dark,
+            this.theme_foreground_video_light});
+            this.theme_foreground_video.Text = "Video";
+            // 
+            // theme_foreground_video_dark
+            // 
+            this.theme_foreground_video_dark.Checked = true;
+            this.theme_foreground_video_dark.Index = 0;
+            this.theme_foreground_video_dark.RadioCheck = true;
+            this.theme_foreground_video_dark.Text = "Dark";
+            // 
+            // theme_foreground_video_light
+            // 
+            this.theme_foreground_video_light.Index = 1;
+            this.theme_foreground_video_light.RadioCheck = true;
+            this.theme_foreground_video_light.Text = "Light";
+            // 
+            // theme_foreground_material
+            // 
+            this.theme_foreground_material.Index = 1;
+            this.theme_foreground_material.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_foreground_material_dark,
+            this.theme_foreground_material_light});
+            this.theme_foreground_material.Text = "Material";
+            // 
+            // theme_foreground_material_dark
+            // 
+            this.theme_foreground_material_dark.Checked = true;
+            this.theme_foreground_material_dark.Index = 0;
+            this.theme_foreground_material_dark.RadioCheck = true;
+            this.theme_foreground_material_dark.Text = "Dark";
+            // 
+            // theme_foreground_material_light
+            // 
+            this.theme_foreground_material_light.Index = 1;
+            this.theme_foreground_material_light.RadioCheck = true;
+            this.theme_foreground_material_light.Text = "Light";
+            // 
+            // theme_foreground_streamsettings
+            // 
+            this.theme_foreground_streamsettings.Index = 2;
+            this.theme_foreground_streamsettings.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_foreground_streamsettings_dark,
+            this.theme_foreground_streamsettings_light});
+            this.theme_foreground_streamsettings.Text = "Stream Settings";
+            // 
+            // theme_foreground_streamsettings_dark
+            // 
+            this.theme_foreground_streamsettings_dark.Checked = true;
+            this.theme_foreground_streamsettings_dark.Index = 0;
+            this.theme_foreground_streamsettings_dark.RadioCheck = true;
+            this.theme_foreground_streamsettings_dark.Text = "Dark";
+            // 
+            // theme_foreground_streamsettings_light
+            // 
+            this.theme_foreground_streamsettings_light.Index = 1;
+            this.theme_foreground_streamsettings_light.RadioCheck = true;
+            this.theme_foreground_streamsettings_light.Text = "Light";
+            // 
+            // theme_foreground_rendersettings
+            // 
+            this.theme_foreground_rendersettings.Index = 3;
+            this.theme_foreground_rendersettings.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_foreground_rendersettings_dark,
+            this.theme_foreground_rendersettings_light});
+            this.theme_foreground_rendersettings.Text = "Render Settings";
+            // 
+            // theme_foreground_rendersettings_dark
+            // 
+            this.theme_foreground_rendersettings_dark.Checked = true;
+            this.theme_foreground_rendersettings_dark.Index = 0;
+            this.theme_foreground_rendersettings_dark.RadioCheck = true;
+            this.theme_foreground_rendersettings_dark.Text = "Dark";
+            // 
+            // theme_foreground_rendersettings_light
+            // 
+            this.theme_foreground_rendersettings_light.Index = 1;
+            this.theme_foreground_rendersettings_light.RadioCheck = true;
+            this.theme_foreground_rendersettings_light.Text = "Light";
+            // 
+            // theme_background
+            // 
+            this.theme_background.Index = 2;
+            this.theme_background.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_background_ytpplusplus,
+            this.theme_background_materiallist});
+            this.theme_background.Text = "Background";
+            // 
+            // theme_background_ytpplusplus
+            // 
+            this.theme_background_ytpplusplus.Index = 0;
+            this.theme_background_ytpplusplus.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_background_ytpplusplus_dark,
+            this.theme_background_ytpplusplus_light});
+            this.theme_background_ytpplusplus.Text = "YTP++";
+            // 
+            // theme_background_ytpplusplus_dark
+            // 
+            this.theme_background_ytpplusplus_dark.Checked = true;
+            this.theme_background_ytpplusplus_dark.Index = 0;
+            this.theme_background_ytpplusplus_dark.RadioCheck = true;
+            this.theme_background_ytpplusplus_dark.Text = "Dark";
+            // 
+            // theme_background_ytpplusplus_light
+            // 
+            this.theme_background_ytpplusplus_light.Index = 1;
+            this.theme_background_ytpplusplus_light.RadioCheck = true;
+            this.theme_background_ytpplusplus_light.Text = "Light";
+            // 
+            // theme_background_materiallist
+            // 
+            this.theme_background_materiallist.Index = 1;
+            this.theme_background_materiallist.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_background_materiallist_dark,
+            this.theme_background_materiallist_light});
+            this.theme_background_materiallist.Text = "Material List";
+            // 
+            // theme_background_materiallist_dark
+            // 
+            this.theme_background_materiallist_dark.Index = 0;
+            this.theme_background_materiallist_dark.RadioCheck = true;
+            this.theme_background_materiallist_dark.Text = "Dark";
+            // 
+            // theme_background_materiallist_light
+            // 
+            this.theme_background_materiallist_light.Checked = true;
+            this.theme_background_materiallist_light.Index = 1;
+            this.theme_background_materiallist_light.RadioCheck = true;
+            this.theme_background_materiallist_light.Text = "Light";
+            // 
+            // theme_labels
+            // 
+            this.theme_labels.Index = 3;
+            this.theme_labels.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_labels_dark,
+            this.theme_labels_light});
+            this.theme_labels.Text = "Labels";
+            // 
+            // theme_labels_dark
+            // 
+            this.theme_labels_dark.Checked = true;
+            this.theme_labels_dark.Index = 0;
+            this.theme_labels_dark.RadioCheck = true;
+            this.theme_labels_dark.Text = "Dark";
+            // 
+            // theme_labels_light
+            // 
+            this.theme_labels_light.Index = 1;
+            this.theme_labels_light.RadioCheck = true;
+            this.theme_labels_light.Text = "Light";
+            // 
+            // theme_buttons
+            // 
+            this.theme_buttons.Index = 4;
+            this.theme_buttons.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_render,
+            this.theme_buttons_beginning,
+            this.theme_buttons_playpause,
+            this.theme_buttons_end,
+            this.theme_buttons_saveas,
+            this.theme_buttons_addmp4,
+            this.theme_buttons_clear,
+            this.theme_buttons_progress});
+            this.theme_buttons.Text = "Buttons";
+            // 
+            // theme_buttons_render
+            // 
+            this.theme_buttons_render.Index = 0;
+            this.theme_buttons_render.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_render_dark,
+            this.theme_buttons_render_light});
+            this.theme_buttons_render.Text = "Render";
+            // 
+            // theme_buttons_render_dark
+            // 
+            this.theme_buttons_render_dark.Index = 0;
+            this.theme_buttons_render_dark.RadioCheck = true;
+            this.theme_buttons_render_dark.Text = "Dark";
+            // 
+            // theme_buttons_render_light
+            // 
+            this.theme_buttons_render_light.Checked = true;
+            this.theme_buttons_render_light.Index = 1;
+            this.theme_buttons_render_light.RadioCheck = true;
+            this.theme_buttons_render_light.Text = "Light";
+            // 
+            // theme_buttons_beginning
+            // 
+            this.theme_buttons_beginning.Index = 1;
+            this.theme_buttons_beginning.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_beginning_dark,
+            this.theme_buttons_beginning_light});
+            this.theme_buttons_beginning.Text = "Playback Beginning";
+            // 
+            // theme_buttons_beginning_dark
+            // 
+            this.theme_buttons_beginning_dark.Index = 0;
+            this.theme_buttons_beginning_dark.RadioCheck = true;
+            this.theme_buttons_beginning_dark.Text = "Dark";
+            // 
+            // theme_buttons_beginning_light
+            // 
+            this.theme_buttons_beginning_light.Checked = true;
+            this.theme_buttons_beginning_light.Index = 1;
+            this.theme_buttons_beginning_light.RadioCheck = true;
+            this.theme_buttons_beginning_light.Text = "Light";
+            // 
+            // theme_buttons_playpause
+            // 
+            this.theme_buttons_playpause.Index = 2;
+            this.theme_buttons_playpause.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_playpause_dark,
+            this.theme_buttons_playpause_light});
+            this.theme_buttons_playpause.Text = "Play/Pause";
+            // 
+            // theme_buttons_playpause_dark
+            // 
+            this.theme_buttons_playpause_dark.Index = 0;
+            this.theme_buttons_playpause_dark.RadioCheck = true;
+            this.theme_buttons_playpause_dark.Text = "Dark";
+            // 
+            // theme_buttons_playpause_light
+            // 
+            this.theme_buttons_playpause_light.Checked = true;
+            this.theme_buttons_playpause_light.Index = 1;
+            this.theme_buttons_playpause_light.RadioCheck = true;
+            this.theme_buttons_playpause_light.Text = "Light";
+            // 
+            // theme_buttons_end
+            // 
+            this.theme_buttons_end.Index = 3;
+            this.theme_buttons_end.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_end_dark,
+            this.theme_buttons_end_light});
+            this.theme_buttons_end.Text = "Playback End";
+            // 
+            // theme_buttons_end_dark
+            // 
+            this.theme_buttons_end_dark.Index = 0;
+            this.theme_buttons_end_dark.RadioCheck = true;
+            this.theme_buttons_end_dark.Text = "Dark";
+            // 
+            // theme_buttons_end_light
+            // 
+            this.theme_buttons_end_light.Checked = true;
+            this.theme_buttons_end_light.Index = 1;
+            this.theme_buttons_end_light.RadioCheck = true;
+            this.theme_buttons_end_light.Text = "Light";
+            // 
+            // theme_buttons_saveas
+            // 
+            this.theme_buttons_saveas.Index = 4;
+            this.theme_buttons_saveas.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_saveas_dark,
+            this.theme_buttons_saveas_light});
+            this.theme_buttons_saveas.Text = "Save as...";
+            // 
+            // theme_buttons_saveas_dark
+            // 
+            this.theme_buttons_saveas_dark.Index = 0;
+            this.theme_buttons_saveas_dark.RadioCheck = true;
+            this.theme_buttons_saveas_dark.Text = "Dark";
+            // 
+            // theme_buttons_saveas_light
+            // 
+            this.theme_buttons_saveas_light.Checked = true;
+            this.theme_buttons_saveas_light.Index = 1;
+            this.theme_buttons_saveas_light.RadioCheck = true;
+            this.theme_buttons_saveas_light.Text = "Light";
+            // 
+            // theme_buttons_addmp4
+            // 
+            this.theme_buttons_addmp4.Index = 5;
+            this.theme_buttons_addmp4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_addmp4_dark,
+            this.theme_buttons_addmp4_light});
+            this.theme_buttons_addmp4.Text = "Add (*.mp4)";
+            // 
+            // theme_buttons_addmp4_dark
+            // 
+            this.theme_buttons_addmp4_dark.Index = 0;
+            this.theme_buttons_addmp4_dark.RadioCheck = true;
+            this.theme_buttons_addmp4_dark.Text = "Dark";
+            // 
+            // theme_buttons_addmp4_light
+            // 
+            this.theme_buttons_addmp4_light.Checked = true;
+            this.theme_buttons_addmp4_light.Index = 1;
+            this.theme_buttons_addmp4_light.RadioCheck = true;
+            this.theme_buttons_addmp4_light.Text = "Light";
+            // 
+            // theme_buttons_clear
+            // 
+            this.theme_buttons_clear.Index = 6;
+            this.theme_buttons_clear.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_clear_dark,
+            this.theme_buttons_clear_light});
+            this.theme_buttons_clear.Text = "Clear";
+            // 
+            // theme_buttons_clear_dark
+            // 
+            this.theme_buttons_clear_dark.Index = 0;
+            this.theme_buttons_clear_dark.RadioCheck = true;
+            this.theme_buttons_clear_dark.Text = "Dark";
+            // 
+            // theme_buttons_clear_light
+            // 
+            this.theme_buttons_clear_light.Checked = true;
+            this.theme_buttons_clear_light.Index = 1;
+            this.theme_buttons_clear_light.RadioCheck = true;
+            this.theme_buttons_clear_light.Text = "Light";
+            // 
+            // theme_buttons_progress
+            // 
+            this.theme_buttons_progress.Index = 7;
+            this.theme_buttons_progress.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_buttons_progress_dark,
+            this.theme_buttons_progress_light});
+            this.theme_buttons_progress.Text = "Progress Bar";
+            // 
+            // theme_buttons_progress_dark
+            // 
+            this.theme_buttons_progress_dark.Index = 0;
+            this.theme_buttons_progress_dark.RadioCheck = true;
+            this.theme_buttons_progress_dark.Text = "Dark";
+            // 
+            // theme_buttons_progress_light
+            // 
+            this.theme_buttons_progress_light.Checked = true;
+            this.theme_buttons_progress_light.Index = 1;
+            this.theme_buttons_progress_light.RadioCheck = true;
+            this.theme_buttons_progress_light.Text = "Light";
+            // 
+            // theme_textboxes
+            // 
+            this.theme_textboxes.Index = 5;
+            this.theme_textboxes.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.theme_textboxes_dark,
+            this.theme_textboxes_light});
+            this.theme_textboxes.Text = "Text Boxes";
+            // 
+            // theme_textboxes_dark
+            // 
+            this.theme_textboxes_dark.Index = 0;
+            this.theme_textboxes_dark.RadioCheck = true;
+            this.theme_textboxes_dark.Text = "Dark";
+            // 
+            // theme_textboxes_light
+            // 
+            this.theme_textboxes_light.Checked = true;
+            this.theme_textboxes_light.Index = 1;
+            this.theme_textboxes_light.RadioCheck = true;
+            this.theme_textboxes_light.Text = "Light";
             // 
             // m_tools
             // 
             this.m_tools.Index = 3;
             this.m_tools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.overlaydir,
-            this.m_ffmpeg,
-            this.m_ffprobe,
-            this.m_magick,
-            this.m_temp,
-            this.m_sounds,
-            this.m_music,
-            this.m_resources,
-            this.m_printconfig,
-            this.m_reset});
+            this.pluginTest,
+            this.executables,
+            this.folders,
+            this.m_reset,
+            this.m_printconfig});
             this.m_tools.ShowShortcut = false;
             this.m_tools.Text = "Tools";
             // 
-            // overlaydir
+            // pluginTest
             // 
-            this.overlaydir.Index = 0;
-            this.overlaydir.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.overlay,
-            this.setoverlay,
-            this.removeoverlay});
-            this.overlaydir.Text = "Overlay directory";
+            this.pluginTest.Index = 0;
+            this.pluginTest.Text = "Plugin testing";
+            this.pluginTest.Click += new System.EventHandler(this.pluginTest_Click);
             // 
-            // overlay
+            // executables
             // 
-            this.overlay.Enabled = false;
-            this.overlay.Index = 0;
-            this.overlay.Text = "No overlay directory";
-            // 
-            // setoverlay
-            // 
-            this.setoverlay.Index = 1;
-            this.setoverlay.Text = "Set overlay directory";
-            // 
-            // removeoverlay
-            // 
-            this.removeoverlay.Index = 2;
-            this.removeoverlay.Text = "Remove overlay directory";
+            this.executables.Index = 1;
+            this.executables.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.m_ffmpeg,
+            this.m_ffprobe,
+            this.m_magick});
+            this.executables.Text = "Set executables";
             // 
             // m_ffmpeg
             // 
-            this.m_ffmpeg.Index = 1;
+            this.m_ffmpeg.Index = 0;
             this.m_ffmpeg.Text = "Set ffmpeg.exe";
             this.m_ffmpeg.Click += new System.EventHandler(this.m_ffmpeg_Click);
             // 
             // m_ffprobe
             // 
-            this.m_ffprobe.Index = 2;
+            this.m_ffprobe.Index = 1;
             this.m_ffprobe.Text = "Set ffprobe.exe";
             this.m_ffprobe.Click += new System.EventHandler(this.m_ffprobe_Click);
             // 
             // m_magick
             // 
-            this.m_magick.Index = 3;
+            this.m_magick.Index = 2;
             this.m_magick.Text = "Set magick.exe";
             this.m_magick.Click += new System.EventHandler(this.m_magick_Click);
             // 
+            // folders
+            // 
+            this.folders.Index = 2;
+            this.folders.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.m_temp,
+            this.m_sounds,
+            this.m_music,
+            this.m_resources});
+            this.folders.Text = "Set folders";
+            // 
             // m_temp
             // 
-            this.m_temp.Index = 4;
+            this.m_temp.Index = 0;
             this.m_temp.Text = "Set temp/ folder";
             this.m_temp.Click += new System.EventHandler(this.m_temp_Click);
             // 
             // m_sounds
             // 
-            this.m_sounds.Index = 5;
+            this.m_sounds.Index = 1;
             this.m_sounds.Text = "Set sounds/ folder";
             this.m_sounds.Click += new System.EventHandler(this.m_sounds_Click);
             // 
             // m_music
             // 
-            this.m_music.Index = 6;
+            this.m_music.Index = 2;
             this.m_music.Text = "Set music/ folder";
             this.m_music.Click += new System.EventHandler(this.m_music_Click);
             // 
             // m_resources
             // 
-            this.m_resources.Index = 7;
+            this.m_resources.Index = 3;
             this.m_resources.Text = "Set resources/ folder";
             this.m_resources.Click += new System.EventHandler(this.m_resources_Click);
             // 
-            // m_printconfig
-            // 
-            this.m_printconfig.Index = 8;
-            this.m_printconfig.Text = "Print current config";
-            this.m_printconfig.Click += new System.EventHandler(this.m_printconfig_Click);
-            // 
             // m_reset
             // 
-            this.m_reset.Index = 9;
+            this.m_reset.Index = 3;
             this.m_reset.Shortcut = System.Windows.Forms.Shortcut.F10;
             this.m_reset.Text = "Reset all";
             this.m_reset.Click += new System.EventHandler(this.m_reset_Click);
             // 
-            // menuItem1
+            // m_printconfig
             // 
-            this.menuItem1.Index = 4;
-            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.m_printconfig.Index = 4;
+            this.m_printconfig.Text = "Print current config";
+            this.m_printconfig.Click += new System.EventHandler(this.m_printconfig_Click);
+            // 
+            // m_effects
+            // 
+            this.m_effects.Index = 4;
+            this.m_effects.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.videoeffects,
             this.audioeffects,
             this.plugins});
-            this.menuItem1.Text = "Effects";
+            this.m_effects.Text = "Effects";
             // 
             // videoeffects
             // 
@@ -726,8 +1189,7 @@
             this.speedup,
             this.slowdown,
             this.effect_Dance,
-            this.effect_Squidward,
-            this.effect_RainbowTrail});
+            this.effect_Squidward});
             this.videoeffects.Text = "Video Effects";
             // 
             // effect_Reverse
@@ -794,13 +1256,6 @@
             this.effect_Squidward.Index = 4;
             this.effect_Squidward.Text = "Squidward";
             this.effect_Squidward.Click += new System.EventHandler(this.effect_Squidward_Click);
-            // 
-            // effect_RainbowTrail
-            // 
-            this.effect_RainbowTrail.Checked = true;
-            this.effect_RainbowTrail.Index = 5;
-            this.effect_RainbowTrail.Text = "Rainbow Trail";
-            this.effect_RainbowTrail.Click += new System.EventHandler(this.effect_RainbowTrail_Click);
             // 
             // audioeffects
             // 
@@ -947,7 +1402,12 @@
             // folderBrowserVLC
             // 
             this.folderBrowserVLC.Description = "Please locate your VLC directory. (VideoLAN/VLC)";
-            this.folderBrowserVLC.RootFolder = System.Environment.SpecialFolder.ProgramFilesX86;
+            // 
+            // theme_custom
+            // 
+            this.theme_custom.Enabled = false;
+            this.theme_custom.Index = 2;
+            this.theme_custom.Text = "Custom";
             // 
             // YTPPlusPlus
             // 
@@ -971,7 +1431,8 @@
             this.Name = "YTPPlusPlus";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "YTP++ [v2.0]";
+            this.Text = "YTP++ [v2.1]";
+            this.Load += new System.EventHandler(this.YTPPlusPlus_Load);
             this.Video.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
@@ -1054,7 +1515,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.MenuItem m_printconfig;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserVLC;
-        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem m_effects;
         private System.Windows.Forms.MenuItem videoeffects;
         private System.Windows.Forms.MenuItem effect_Reverse;
         private System.Windows.Forms.MenuItem speedup;
@@ -1073,11 +1534,66 @@
         private System.Windows.Forms.MenuItem effect_Chorus;
         private System.Windows.Forms.MenuItem effect_Vibrato;
         private System.Windows.Forms.MenuItem noPlugins;
-        private System.Windows.Forms.MenuItem overlaydir;
-        private System.Windows.Forms.MenuItem overlay;
-        private System.Windows.Forms.MenuItem setoverlay;
-        private System.Windows.Forms.MenuItem removeoverlay;
-        private System.Windows.Forms.MenuItem effect_RainbowTrail;
+        private System.Windows.Forms.MenuItem pluginTest;
+        private System.Windows.Forms.MenuItem executables;
+        private System.Windows.Forms.MenuItem folders;
+        private System.Windows.Forms.MenuItem themes;
+        private System.Windows.Forms.MenuItem theme_dark;
+        private System.Windows.Forms.MenuItem theme_light;
+        private System.Windows.Forms.MenuItem theme_customedit;
+        private System.Windows.Forms.MenuItem theme_foreground;
+        private System.Windows.Forms.MenuItem theme_foreground_video;
+        private System.Windows.Forms.MenuItem theme_foreground_video_dark;
+        private System.Windows.Forms.MenuItem theme_foreground_video_light;
+        private System.Windows.Forms.MenuItem theme_foreground_material;
+        private System.Windows.Forms.MenuItem theme_foreground_streamsettings;
+        private System.Windows.Forms.MenuItem theme_foreground_material_dark;
+        private System.Windows.Forms.MenuItem theme_foreground_material_light;
+        private System.Windows.Forms.MenuItem theme_foreground_streamsettings_dark;
+        private System.Windows.Forms.MenuItem theme_foreground_streamsettings_light;
+        private System.Windows.Forms.MenuItem theme_foreground_rendersettings;
+        private System.Windows.Forms.MenuItem theme_foreground_rendersettings_dark;
+        private System.Windows.Forms.MenuItem theme_foreground_rendersettings_light;
+        private System.Windows.Forms.MenuItem theme_background;
+        private System.Windows.Forms.MenuItem theme_background_ytpplusplus;
+        private System.Windows.Forms.MenuItem theme_background_ytpplusplus_dark;
+        private System.Windows.Forms.MenuItem theme_background_ytpplusplus_light;
+        private System.Windows.Forms.MenuItem theme_background_materiallist;
+        private System.Windows.Forms.MenuItem theme_background_materiallist_dark;
+        private System.Windows.Forms.MenuItem theme_background_materiallist_light;
+        private System.Windows.Forms.MenuItem theme_labels;
+        private System.Windows.Forms.MenuItem theme_labels_dark;
+        private System.Windows.Forms.MenuItem theme_labels_light;
+        private System.Windows.Forms.MenuItem theme_buttons;
+        private System.Windows.Forms.MenuItem theme_buttons_beginning;
+        private System.Windows.Forms.MenuItem theme_buttons_beginning_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_beginning_light;
+        private System.Windows.Forms.MenuItem theme_buttons_playpause;
+        private System.Windows.Forms.MenuItem theme_buttons_playpause_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_playpause_light;
+        private System.Windows.Forms.MenuItem theme_buttons_end;
+        private System.Windows.Forms.MenuItem theme_buttons_end_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_end_light;
+        private System.Windows.Forms.MenuItem theme_buttons_saveas;
+        private System.Windows.Forms.MenuItem theme_buttons_saveas_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_saveas_light;
+        private System.Windows.Forms.MenuItem theme_buttons_addmp4;
+        private System.Windows.Forms.MenuItem theme_buttons_addmp4_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_addmp4_light;
+        private System.Windows.Forms.MenuItem theme_buttons_clear;
+        private System.Windows.Forms.MenuItem theme_buttons_clear_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_clear_light;
+        private System.Windows.Forms.MenuItem theme_buttons_progress;
+        private System.Windows.Forms.MenuItem theme_buttons_progress_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_progress_light;
+        private System.Windows.Forms.MenuItem theme_buttons_render;
+        private System.Windows.Forms.MenuItem theme_buttons_render_dark;
+        private System.Windows.Forms.MenuItem theme_buttons_render_light;
+        private System.Windows.Forms.MenuItem theme_textboxes;
+        private System.Windows.Forms.MenuItem theme_textboxes_dark;
+        private System.Windows.Forms.MenuItem theme_textboxes_light;
+        private System.Windows.Forms.MenuItem notimplemented;
+        private System.Windows.Forms.MenuItem theme_custom;
     }
 }
 

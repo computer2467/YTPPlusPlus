@@ -1,7 +1,105 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="YTPPlusPlus.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="VLC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:/Program Files (x86)/VideoLAN/VLC</Value>
+    </Setting>
+    <Setting Name="Theme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Dark</Value>
+    </Setting>
+    <Setting Name="effect_RandomSound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_RandomSoundMute" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_Reverse" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_SpeedUp" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_SlowDown" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_Chorus" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_Vibrato" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_HighPitch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_LowPitch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_Dance" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="effect_Squidward" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PluginTest" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InsertTransitions" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InsertIntro" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InsertOutro" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Clips" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">640</Value>
+    </Setting>
+    <Setting Name="Height" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">480</Value>
+    </Setting>
+    <Setting Name="MinStreamDur" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.2</Value>
+    </Setting>
+    <Setting Name="MaxStreamDur" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.4</Value>
+    </Setting>
+    <Setting Name="Intro" Type="System.String" Scope="User">
+      <Value Profile="(Default)">resources\intro.mp4</Value>
+    </Setting>
+    <Setting Name="Outro" Type="System.String" Scope="User">
+      <Value Profile="(Default)">resources\outro.mp4</Value>
+    </Setting>
+    <Setting Name="FFmpeg" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ffmpeg.exe</Value>
+    </Setting>
+    <Setting Name="FFprobe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ffprobe.exe</Value>
+    </Setting>
+    <Setting Name="Magick" Type="System.String" Scope="User">
+      <Value Profile="(Default)">magick</Value>
+    </Setting>
+    <Setting Name="Sources" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sources\</Value>
+    </Setting>
+    <Setting Name="Temp" Type="System.String" Scope="User">
+      <Value Profile="(Default)">temp\</Value>
+    </Setting>
+    <Setting Name="Sounds" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sounds\</Value>
+    </Setting>
+    <Setting Name="Music" Type="System.String" Scope="User">
+      <Value Profile="(Default)">music\</Value>
+    </Setting>
+    <Setting Name="Resources" Type="System.String" Scope="User">
+      <Value Profile="(Default)">resources\</Value>
+    </Setting>
+    <Setting Name="TransitionDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sources\</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

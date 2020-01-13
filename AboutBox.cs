@@ -16,5 +16,10 @@ namespace YTPPlusPlus
             this.textBoxDescription.Text = AssemblyDescription;
             */
         }
+
+        private void labelCompanyName_Click(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

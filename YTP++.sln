@@ -11,6 +11,7 @@ Global
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
+		Description = YouTube Poop Generator
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9745A375-7E9A-498F-AA58-C87D117C1B5F}.Debug|Any CPU.ActiveCfg = Debug|x86

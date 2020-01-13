@@ -922,8 +922,9 @@ namespace YTPPlus
             }
             catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
         }
-        public void effect_RainbowTrail(string video, int width, int height)
+        /*public void effect_RainbowTrail(string video, int width, int height, double startOfClip, double endOfClip)
         {
+            //completely broken don't bother
             Console.WriteLine("effect_RainbowTrail initiated");
             try
             {
@@ -934,21 +935,24 @@ namespace YTPPlus
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
-
-                string randomSound = pickSound();
-
+                string temp2 = toolBox.TEMP + "temp2.mp4";
+                if (File.Exists(temp2))
+                {
+                    File.Delete(temp2);
+                }
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -filter:v setpts=2*PTS -af asetrate=44100*0.5,aresample=44100 -y " + video;
+                startInfo.Arguments = "-i " + temp
+                        + " -vf "
+                        + "scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
+                        + " -y " + temp2;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
+
                 // Read stderr synchronously (on another thread)
 
                 string errorText = null;
@@ -970,12 +974,50 @@ namespace YTPPlus
                 stderrThread.Join();
 
                 int exitValue = process.ExitCode;
+
+                System.Diagnostics.Process process2 = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo2 = new System.Diagnostics.ProcessStartInfo();
+                startInfo2.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo2.FileName = toolBox.FFMPEG;
+                startInfo2.Arguments = "-i " + temp2
+                        + " -ss " + startOfClip.ToString("0.#########################", new CultureInfo("en-US"))
+                        + " -to " + endOfClip.ToString("0.#########################", new CultureInfo("en-US"))
+                        + " -ac 1"
+                        + " -ar 44100 -vf" //see https://oioiiooixiii.blogspot.com/2017/09/ffmpeg-rainbow-trail-chromakey-effect.html
+                        + " split[a][b];[a]colorchannelmixer=2:2:2:2:0:0:0:0:0:0:0:0:0:0:0:0,smartblur,colorchannelmixer=2:0:0:0:0:0:0:0:2:0:0:0:0:0:0:0,setpts=PTS+0.1/TB,split[a][c];[b]colorkey=0x000000:0.1:0.4[b];[c][b]overlay[b];[a]colorchannelmixer=2:2:2:2:0:0:0:0:0:0:0:0:0:0:0:0,smartblur,colorchannelmixer=0.5:0:0:0:0:0:0:0:2:0:0:0:0:0:0:0,setpts=PTS+0.1/TB,split[a][c];[b]colorkey=0x000000:0.1:0.4[b];[c][b]overlay[b];[a]colorchannelmixer=2:2:2:2:0:0:0:0:0:0:0:0:0:0:0:0,smartblur,colorchannelmixer=0:0:0:0:0:0:0:0:2:0:0:0:0:0:0:0,setpts=PTS+0.1/TB,split[a][c];[b]colorkey=0x000000:0.1:0.4[b];[c][b]overlay[b];[a]colorchannelmixer=2:2:2:2:0:0:0:0:0:0:0:0:0:0:0:0,smartblur,colorchannelmixer=0:0:0:0:2:0:0:0:0:0:0:0:0:0:0:0,setpts=PTS+0.1/TB,split[a][c];[b]colorkey=0x000000:0.1:0.4[b];[c][b]overlay[b];[a]colorchannelmixer=2:2:2:2:0:0:0:0:0:0:0:0:0:0:0:0,smartblur,colorchannelmixer=2:0:0:0:2:0:0:0:0:0:0:0:0:0:0:0,setpts=PTS+0.1/TB,split[a][c];[b]colorkey=0x000000:0.1:0.4[b];[c][b]overlay[b];[a]colorchannelmixer=2:2:2:2:0:0:0:0:0:0:0:0:0:0:0:0,smartblur,colorchannelmixer=2:0:0:0:0.5:0:0:0:0:0:0:0:0:0:0:0,setpts=PTS+0.1/TB,split[a][c];[b]colorkey=0x000000:0.1:0.4[b];[c][b]overlay[b];[a]colorchannelmixer=2:2:2:2:0:0:0:0:0:0:0:0:0:0:0:0,smartblur,colorchannelmixer=2:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0,setpts=PTS+0.1/TB,split[a][c];[b]colorkey=0x000000:0.1:0.4[b];[c][b]overlay[b];[a][b]overlay"
+                        + " -y " + video;
+                startInfo2.UseShellExecute = false;
+                startInfo2.RedirectStandardOutput = true;
+                process2.StartInfo = startInfo2;
+                process2.Start();
+                // Read stderr synchronously (on another thread)
+
+                string errorText2 = null;
+                var stderrThread2 = new Thread(() => { errorText2 = process2.StandardOutput.ReadToEnd(); });
+                stderrThread2.Start();
+
+                // Read stdout synchronously (on this thread)
+
+                while (true)
+                {
+                    var line = process2.StandardOutput.ReadLine();
+                    if (line == null)
+                        break;
+
+                    Console.WriteLine(line);
+                }
+
+                process2.WaitForExit();
+                stderrThread2.Join();
+
+                int exitValue2 = process.ExitCode;
                 File.Delete(temp);
+                File.Delete(temp2);
             }
             catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
-        }
+        }*/
 
-        public void effect_Plugin(string video, int width, int height, string plugin)
+        public void effect_Plugin(string video, int width, int height, string plugin, double startOfClip, double endOfClip)
         {
             Console.WriteLine(plugin+" initiated");
             try
@@ -984,7 +1026,7 @@ namespace YTPPlus
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = plugin;
-                startInfo.Arguments = video + " " + width + " " + height + " " + toolBox.TEMP + " " + toolBox.FFMPEG + " " + toolBox.FFPROBE + " " + toolBox.MAGICK + " " + toolBox.RESOURCES + " " + toolBox.SOUNDS + " " + toolBox.SOURCES + " " + toolBox.MUSIC;
+                startInfo.Arguments = video + " " + width + " " + height + " " + toolBox.TEMP + " " + toolBox.FFMPEG + " " + toolBox.FFPROBE + " " + toolBox.MAGICK + " " + toolBox.RESOURCES + " " + toolBox.SOUNDS + " " + toolBox.SOURCES + " " + toolBox.MUSIC + " " + startOfClip.ToString("0.#########################", new CultureInfo("en-US")) + " " + endOfClip.ToString("0.#########################", new CultureInfo("en-US"));
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;

@@ -1,7 +1,10 @@
-﻿using System;
+﻿using DiscordRPC;
+using DiscordRPC.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -39,6 +42,7 @@ namespace YTPPlusPlus
         bool effect11Def = true;
         bool introBoolDef = false;
         bool outroBoolDef = true;
+        bool pluginTestDef = false;
         int clipCountDef = 20;
         int widthDef = 640;
         int heightDef = 480;
@@ -60,6 +64,8 @@ namespace YTPPlusPlus
         Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager taskbarInstance;
         System.Media.SoundPlayer renderCompleteSnd;
         System.Media.SoundPlayer renderFailedSnd;
+        public DiscordRpcClient client;
+        public DiscordRPC.Timestamps timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
         public void ResetVars()
         {
             this.InsertTransitions.Checked = transitionsDef;
@@ -74,6 +80,7 @@ namespace YTPPlusPlus
             this.effect_SlowDown.Checked = effect9Def;
             this.effect_Dance.Checked = effect10Def;
             this.effect_Squidward.Checked = effect11Def;
+            this.pluginTest.Checked = pluginTestDef;
             this.InsertIntro.Checked = introBoolDef;
             this.InsertOutro.Checked = outroBoolDef;
             this.Clips.Value = clipCountDef;
@@ -123,6 +130,100 @@ namespace YTPPlusPlus
 
         }
         //end default variables
+
+        public void SetVars()
+        {
+            this.InsertTransitions.Checked = Properties.Settings.Default.InsertTransitions;
+            this.effect_RandomSound.Checked = Properties.Settings.Default.effect_RandomSound;
+            this.effect_RandomSoundMute.Checked = Properties.Settings.Default.effect_RandomSoundMute;
+            this.effect_Reverse.Checked = Properties.Settings.Default.effect_Reverse;
+            this.effect_SpeedUp.Checked = Properties.Settings.Default.effect_SpeedUp;
+            this.effect_SlowDown.Checked = Properties.Settings.Default.effect_SlowDown;
+            this.effect_Chorus.Checked = Properties.Settings.Default.effect_Chorus;
+            this.effect_Vibrato.Checked = Properties.Settings.Default.effect_Vibrato;
+            this.effect_HighPitch.Checked = Properties.Settings.Default.effect_HighPitch;
+            this.effect_SlowDown.Checked = Properties.Settings.Default.effect_SlowDown;
+            this.effect_Dance.Checked = Properties.Settings.Default.effect_Dance;
+            this.effect_Squidward.Checked = Properties.Settings.Default.effect_Squidward;
+            this.pluginTest.Checked = Properties.Settings.Default.PluginTest;
+            this.InsertIntro.Checked = Properties.Settings.Default.InsertIntro;
+            this.InsertOutro.Checked = Properties.Settings.Default.InsertOutro;
+            this.Clips.Value = Properties.Settings.Default.Clips;
+            this.WidthSet.Value = Properties.Settings.Default.Width;
+            this.HeightSet.Value = Properties.Settings.Default.Height;
+            this.MinStreamDur.Value = Properties.Settings.Default.MinStreamDur;
+            this.MaxStreamDur.Value = Properties.Settings.Default.MaxStreamDur;
+            this.Intro.Text = Properties.Settings.Default.Intro;
+            this.Outro.Text = Properties.Settings.Default.Outro;
+            this.ffmpeg = Properties.Settings.Default.FFmpeg;
+            this.ffprobe = Properties.Settings.Default.FFprobe;
+            this.magick = magickDef;
+            this.TransitionDir.Text = Properties.Settings.Default.TransitionDir;
+            this.temp = Properties.Settings.Default.Temp;
+            this.sounds = Properties.Settings.Default.Sounds;
+            this.music = Properties.Settings.Default.Music;
+            this.resources = Properties.Settings.Default.Resources;
+            if (Properties.Settings.Default.Theme == "Dark")
+            {
+                theme_light.Checked = false;
+                theme_dark.Checked = true;
+                theme_custom.Checked = false;
+                switchTheme(Color.FromName("ControlDarkDark"), Color.FromName("ControlDark"), Color.FromName("Control"), Color.FromName("ControlText"));
+            }
+            else if (Properties.Settings.Default.Theme == "Light")
+            {
+                theme_light.Checked = true;
+                theme_dark.Checked = false;
+                theme_custom.Checked = false;
+                switchTheme(Color.FromName("ControlLightLight"), Color.FromName("ControlLight"), Color.FromName("Control"), Color.FromName("ControlText"));
+            }
+            else if (Properties.Settings.Default.Theme == "Custom") {
+                theme_custom.Checked = true;
+                theme_dark.Checked = false;
+                theme_light.Checked = false;
+                alert("CUSTOM THEME NOT IMPLEMENTED");
+            } else
+            {
+                Properties.Settings.Default.Theme = "Dark";
+                theme_light.Checked = false;
+                theme_dark.Checked = true;
+                theme_custom.Checked = false;
+                switchTheme(Color.FromName("ControlDarkDark"), Color.FromName("ControlDark"), Color.FromName("Control"), Color.FromName("ControlText"));
+                alert("THEME NOT SUPPORTED");
+            }
+            pluginCount = 0;
+            enabledPlugins.Clear();
+            plugins.MenuItems.Clear();
+            this.renderCompleteSnd = new System.Media.SoundPlayer(this.resources + "\\rendercomplete.wav");
+            this.renderFailedSnd = new System.Media.SoundPlayer(this.resources + "\\renderfailed.wav");
+            if (Directory.Exists(Directory.GetCurrentDirectory() + "\\plugins"))
+            {
+                string[] d = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\plugins", "*.bat");
+                foreach (string s in d)
+                {
+                    void f(object sender, EventArgs args)
+                    {
+                        MenuItem ss = (MenuItem)sender;
+                        ss.Checked = !ss.Checked;
+                        if (ss.Checked == true)
+                        {
+                            pluginCount++;
+                            enabledPlugins.Add(s);
+                        }
+                        else
+                        {
+                            pluginCount--;
+                            enabledPlugins.Remove(s);
+                        }
+                    }
+                    plugins.MenuItems.Remove(noPlugins);
+                    string newstring = s.Replace(Directory.GetCurrentDirectory() + "\\plugins\\", "");
+                    plugins.MenuItems.Add(new MenuItem(newstring, f));
+                }
+            }
+
+        }
+
 
         //console import
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -255,7 +356,25 @@ namespace YTPPlusPlus
             ((System.ComponentModel.ISupportInitialize)(this.Player)).EndInit();
             //VLCCheck.global.Close();
             Player.Enabled = true;
-            ResetVars();
+            if (Properties.Settings.Default.Intro == "resources\\intro.mp4")
+                Properties.Settings.Default.Intro = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Intro;
+            if (Properties.Settings.Default.Outro == "resources\\outro.mp4")
+                Properties.Settings.Default.Outro = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Outro;
+            if (Properties.Settings.Default.FFmpeg == "ffmpeg.exe")
+                Properties.Settings.Default.FFmpeg = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.FFmpeg;
+            if (Properties.Settings.Default.FFprobe == "ffprobe.exe")
+                Properties.Settings.Default.FFprobe = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.FFprobe;
+            if (Properties.Settings.Default.TransitionDir == "sources\\")
+                Properties.Settings.Default.TransitionDir = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.TransitionDir;
+            if (Properties.Settings.Default.Temp == "temp\\")
+                Properties.Settings.Default.Temp = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Temp;
+            if (Properties.Settings.Default.Sounds == "sounds\\")
+                Properties.Settings.Default.Sounds = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Sounds;
+            if (Properties.Settings.Default.Music == "music\\")
+                Properties.Settings.Default.Music = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Music;
+            if (Properties.Settings.Default.Resources == "resources\\")
+                Properties.Settings.Default.Resources = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Resources;
+            SetVars();
             HideConsoleWindow();
             //this.Player.SetMedia(fi);
             //this.Player.Play();
@@ -269,15 +388,16 @@ namespace YTPPlusPlus
         public YTPPlusPlus()
         {
             InitializeComponent();
-            if (Directory.Exists("C:/Program Files (x86)/VideoLAN/VLC"))
+            if (Directory.Exists(Properties.Settings.Default.VLC))
             {
-                vlcC(new DirectoryInfo("C:/Program Files (x86)/VideoLAN/VLC"));
+                vlcC(new DirectoryInfo(Properties.Settings.Default.VLC));
             }
             else
             {
                 DialogResult result = folderBrowserVLC.ShowDialog();
                 if (result == DialogResult.OK)
                 {
+                    Properties.Settings.Default.VLC = folderBrowserVLC.SelectedPath;
                     vlcC(new DirectoryInfo(folderBrowserVLC.SelectedPath));
                 }
                 else
@@ -285,7 +405,25 @@ namespace YTPPlusPlus
                     PausePlay.Enabled = false;
                     Start.Enabled = false;
                     End.Enabled = false;
-                    ResetVars();
+                    if (Properties.Settings.Default.Intro == "resources\\intro.mp4")
+                        Properties.Settings.Default.Intro = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Intro;
+                    if (Properties.Settings.Default.Outro == "resources\\outro.mp4")
+                        Properties.Settings.Default.Outro = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Outro;
+                    if (Properties.Settings.Default.FFmpeg == "ffmpeg.exe")
+                        Properties.Settings.Default.FFmpeg = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.FFmpeg;
+                    if (Properties.Settings.Default.FFprobe == "ffprobe.exe")
+                        Properties.Settings.Default.FFprobe = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.FFprobe;
+                    if (Properties.Settings.Default.TransitionDir == "sources\\")
+                        Properties.Settings.Default.TransitionDir = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.TransitionDir;
+                    if (Properties.Settings.Default.Temp == "temp\\")
+                        Properties.Settings.Default.Temp = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Temp;
+                    if (Properties.Settings.Default.Sounds == "sounds\\")
+                        Properties.Settings.Default.Sounds = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Sounds;
+                    if (Properties.Settings.Default.Music == "music\\")
+                        Properties.Settings.Default.Music = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Music;
+                    if (Properties.Settings.Default.Resources == "resources\\")
+                        Properties.Settings.Default.Resources = Directory.GetCurrentDirectory() + "\\" + Properties.Settings.Default.Resources;
+                    SetVars();
                     HideConsoleWindow();
                     //this.Player.SetMedia(fi);
                     //this.Player.Play();
@@ -296,6 +434,43 @@ namespace YTPPlusPlus
                     TestMagick();
                 }
             }
+
+            //DISCORD RPC
+            /*
+	        Create a discord client
+	        NOTE: 	If you are using Unity3D, you must use the full constructor and define
+			         the pipe connection.
+	        */
+            client = new DiscordRpcClient("655125577669410829");
+
+            //Set the logger
+            client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+
+            //Subscribe to events
+            client.OnReady += (sender, e) =>
+            {
+                Console.WriteLine("Received Ready from user {0}", e.User.Username);
+            };
+            //Connect to the RPC
+            client.Initialize();
+
+            //Set the rich presence
+            //Call this as many times as you want and anywhere in your code.
+            client.SetPresence(new RichPresence()
+            {
+                Details = titles[new Random().Next(0, titles.Length)],
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon",
+                    LargeImageText = "YTP++, made with ❤ in C#."
+                },
+                State = "Idle",
+                Timestamps = timestamps
+            });
+        }
+        private void YTPPlusPlus_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.Save();
         }
         public void PlayVideo(FileInfo fil)
         {
@@ -320,7 +495,17 @@ namespace YTPPlusPlus
                 this.PausePlay.Text = "| |";
                 this.Player.Play();
             }
-
+            client.SetPresence(new RichPresence()
+            {
+                Details = titles[new Random().Next(0, titles.Length)],
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon",
+                    LargeImageText = "YTP++, made with ❤ in C#."
+                },
+                State = "Idle",
+                Timestamps = timestamps
+            });
         }
 
         private void Start_Click(object sender, EventArgs e)
@@ -337,6 +522,17 @@ namespace YTPPlusPlus
                 this.Player.Play();
                 this.PausePlay.Text = "| |";
             }
+            client.SetPresence(new RichPresence()
+            {
+                Details = titles[new Random().Next(0, titles.Length)],
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon",
+                    LargeImageText = "YTP++, made with ❤ in C#."
+                },
+                State = "Idle",
+                Timestamps = timestamps
+            });
         }
 
         private void End_Click(object sender, EventArgs e)
@@ -348,6 +544,17 @@ namespace YTPPlusPlus
             this.Player.Position += 0.1f;
             if (this.Player.Position > 1f)
                 this.Player.Position = 0.999f;
+            client.SetPresence(new RichPresence()
+            {
+                Details = titles[new Random().Next(0, titles.Length)],
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon",
+                    LargeImageText = "YTP++, made with ❤ in C#."
+                },
+                State = "Idle",
+                Timestamps = timestamps
+            });
         }
 
         private void m_console_Click(object sender, EventArgs e)
@@ -541,6 +748,17 @@ namespace YTPPlusPlus
             {
                 taskbarInstance.SetProgressValue(e.ProgressPercentage,100);
             }
+            client.SetPresence(new RichPresence()
+            {
+                Details = titles[new Random().Next(0, titles.Length)],
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon",
+                    LargeImageText = "YTP++, made with ❤ in C#."
+                },
+                State = "Rendering... ("+ e.ProgressPercentage+"%)",
+                Timestamps = timestamps
+            });
         }
         public void complete(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -568,11 +786,33 @@ namespace YTPPlusPlus
                 {
                     taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Error);
                 }
+                client.SetPresence(new RichPresence()
+                {
+                    Details = titles[new Random().Next(0, titles.Length)],
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "icon",
+                        LargeImageText = "YTP++, made with ❤ in C#."
+                    },
+                    State = "Render failed",
+                    Timestamps = timestamps
+                });
                 renderFailedSnd.Play();
                 alert("An exception has occured during rendering. Rendering may have not produced a result.\n\nThe last exception to occur was:\n" + globalGen.exc.Message);
             } else
             {
                 renderCompleteSnd.Play();
+                client.SetPresence(new RichPresence()
+                {
+                    Details = titles[new Random().Next(0, titles.Length)],
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "icon",
+                        LargeImageText = "YTP++, made with ❤ in C#."
+                    },
+                    State = "Render complete",
+                    Timestamps = timestamps
+                });
             }
         }
         public void RenderVideo()
@@ -585,6 +825,17 @@ namespace YTPPlusPlus
             {
                 try
                 {
+                    client.SetPresence(new RichPresence()
+                    {
+                        Details = titles[new Random().Next(0, titles.Length)],
+                        Assets = new Assets()
+                        {
+                            LargeImageKey = "icon",
+                            LargeImageText = "YTP++, made with ❤ in C#."
+                        },
+                        State = "Rendering...",
+                        Timestamps = timestamps
+                    });
                     if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
                     {
                         taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
@@ -627,7 +878,6 @@ namespace YTPPlusPlus
                     generator.effect9 = this.effect_LowPitch.Checked;
                     generator.effect10 = this.effect_Dance.Checked;
                     generator.effect11 = this.effect_Squidward.Checked;
-                    generator.effect12 = this.effect_RainbowTrail.Checked;
                     generator.pluginCount = pluginCount;
                     generator.plugins = enabledPlugins;
                     generator.insertTransitionClips = InsertTransitions.Checked;
@@ -635,6 +885,7 @@ namespace YTPPlusPlus
                     generator.height = Convert.ToInt32(this.HeightSet.Value, new CultureInfo("en-US"));
                     generator.intro = this.InsertIntro.Checked;
                     generator.outro = this.InsertOutro.Checked;
+                    generator.pluginTest = pluginTest.Checked;
                     Console.WriteLine("poop5");
                     foreach (string sourcem in sources)
                     {
@@ -719,6 +970,17 @@ namespace YTPPlusPlus
                     }
                 }
             }
+            client.SetPresence(new RichPresence()
+            {
+                Details = titles[new Random().Next(0, titles.Length)],
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon",
+                    LargeImageText = "YTP++, made with ❤ in C#."
+                },
+                State = "Idle",
+                Timestamps = timestamps
+            });
         }
 
         private void m_printconfig_Click(object sender, EventArgs e)
@@ -730,7 +992,8 @@ namespace YTPPlusPlus
                 + "\n\n" + "My SOUNDS is: " + sounds
                 + "\n\n" + "My SOURCES is: " + TransitionDir.Text
                 + "\n\n" + "My MUSIC is: " + music
-                + "\n\n" + "My RESOURCES is: " + resources);
+                + "\n\n" + "My RESOURCES is: " + resources
+                + "\n\n" + "My VLC is: " + Properties.Settings.Default.VLC);
         }
 
         private void m_saveas_Click(object sender, EventArgs e)
@@ -751,60 +1014,130 @@ namespace YTPPlusPlus
         private void effect_Reverse_Click(object sender, EventArgs e)
         {
             effect_Reverse.Checked = !effect_Reverse.Checked;
+            Properties.Settings.Default.effect_Reverse = effect_Reverse.Checked;
         }
 
         private void effect_HighPitch_Click(object sender, EventArgs e)
         {
             effect_HighPitch.Checked = !effect_HighPitch.Checked;
+            Properties.Settings.Default.effect_HighPitch = effect_HighPitch.Checked;
         }
 
         private void effect_SpeedUp_Click(object sender, EventArgs e)
         {
             effect_SpeedUp.Checked = !effect_SpeedUp.Checked;
+            Properties.Settings.Default.effect_SpeedUp = effect_SpeedUp.Checked;
         }
 
         private void effect_LowPitch_Click(object sender, EventArgs e)
         {
             effect_LowPitch.Checked = !effect_LowPitch.Checked;
+            Properties.Settings.Default.effect_LowPitch = effect_LowPitch.Checked;
         }
 
         private void effect_SlowDown_Click(object sender, EventArgs e)
         {
             effect_SlowDown.Checked = !effect_SlowDown.Checked;
+            Properties.Settings.Default.effect_SlowDown = effect_SlowDown.Checked;
         }
 
         private void effect_Dance_Click(object sender, EventArgs e)
         {
             effect_Dance.Checked = !effect_Dance.Checked;
+            Properties.Settings.Default.effect_Dance = effect_Dance.Checked;
         }
 
         private void effect_Squidward_Click(object sender, EventArgs e)
         {
             effect_Squidward.Checked = !effect_Squidward.Checked;
-        }
-
-        private void effect_RainbowTrail_Click(object sender, EventArgs e)
-        {
-            effect_RainbowTrail.Checked = !effect_RainbowTrail.Checked;
+            Properties.Settings.Default.effect_Squidward = effect_Squidward.Checked;
         }
 
         private void effect_RandomSound_Click(object sender, EventArgs e)
         {
             effect_RandomSound.Checked = !effect_RandomSound.Checked;
+            Properties.Settings.Default.effect_RandomSound = effect_RandomSound.Checked;
         }
         private void effect_RandomSoundMute_Click(object sender, EventArgs e)
         {
             effect_RandomSoundMute.Checked = !effect_RandomSoundMute.Checked;
+            Properties.Settings.Default.effect_RandomSoundMute = effect_RandomSoundMute.Checked;
         }
 
         private void effect_Chorus_Click(object sender, EventArgs e)
         {
             effect_Chorus.Checked = !effect_Chorus.Checked;
+            Properties.Settings.Default.effect_Chorus = effect_Chorus.Checked;
         }
 
         private void effect_Vibrato_Click(object sender, EventArgs e)
         {
             effect_Vibrato.Checked = !effect_Vibrato.Checked;
+            Properties.Settings.Default.effect_Vibrato = effect_Vibrato.Checked;
+        }
+
+        private void pluginTest_Click(object sender, EventArgs e)
+        {
+            pluginTest.Checked = !pluginTest.Checked;
+            Properties.Settings.Default.PluginTest = pluginTest.Checked;
+            if (pluginTest.Checked)
+            {
+                alert("Enabling plugin testing will cause the effect switch to only select plugins and no other effects.");
+            }
+        }
+        private void theme_dark_Click(object sender, EventArgs e)
+        {
+            theme_light.Checked = false;
+            theme_dark.Checked = true;
+            theme_custom.Checked = false;
+            Properties.Settings.Default.Theme = "Dark";
+            switchTheme(Color.FromName("ControlDarkDark"), Color.FromName("ControlDark"), Color.FromName("Control"),Color.FromName("ControlText"));
+        }
+
+        private void theme_light_Click(object sender, EventArgs e)
+        {
+            theme_light.Checked = true;
+            theme_dark.Checked = false;
+            theme_custom.Checked = false;
+            Properties.Settings.Default.Theme = "Light";
+            switchTheme(Color.FromName("ControlLightLight"), Color.FromName("ControlLight"), Color.FromName("Control"), Color.FromName("ControlText"));
+        }
+
+        public void switchTheme(Color backColor, Color foreColor, Color subColor, Color textColor)
+        {
+            this.BackColor = backColor;
+
+            Video.BackColor = foreColor;
+            Materials.BackColor = foreColor;
+            Settings.BackColor = foreColor;
+            RenderSettings.BackColor = foreColor;
+
+            Material.BackColor = subColor;
+            Render.BackColor = subColor;
+            Start.BackColor = subColor;
+            PausePlay.BackColor = subColor;
+            End.BackColor = subColor;
+            SaveAs.BackColor = subColor;
+            AddMaterial.BackColor = subColor;
+            ClearMaterial.BackColor = subColor;
+            progressBar1.BackColor = subColor;
+
+            Material.ForeColor = textColor;
+            Render.ForeColor = textColor;
+            Start.ForeColor = textColor;
+            PausePlay.ForeColor = textColor;
+            End.ForeColor = textColor;
+            SaveAs.ForeColor = textColor;
+            AddMaterial.ForeColor = textColor;
+            ClearMaterial.ForeColor = textColor;
+            progressBar1.ForeColor = textColor;
+            MaterialLabel.ForeColor = textColor;
+            RenderSettingsLabel.ForeColor = textColor;
+        }
+
+        private void YTPPlusPlus_Load(object sender, EventArgs e)
+        {
+            this.FormClosing += YTPPlusPlus_FormClosing;
         }
     }
 }
