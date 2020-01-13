@@ -18,6 +18,10 @@
   - Setting width/height for rendered videos
   - Includes FFMPEG and FFPROBE
   - Error handling
+  - [Plugin support](https://github.com/YTP-Plus/YTPPlusPlus/wiki/Plugin-Creation)
+
+## A warning call
+For those of you using plugins, please be aware that YTP++ has no mind in what is a real plugin batch and what isn't. Any non-verified plugins have the potential to be malicious, be on the look out for the malicious use of plugins as there is a possibility that a plugin can be harmful. Remember to **NEVER** start YTP++ as an administrator.
 
 ## What is YTP+ and YTP++?
 YTP+ is the name given to a set of tools to automatically generate YouTube Poop videos.
