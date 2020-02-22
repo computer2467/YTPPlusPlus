@@ -1,30 +1,25 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
 
-/**
- * FFMPEG utilities toolbox for YTP+
- *
- * @author benb
- * @author LimeQuartz
- */
-namespace YTPPlus
+namespace YTPPlusPlus.YTPPlus
 {
     public class Utilities
     {
-        public string FFPROBE;
-        public string FFMPEG;
-        public string MAGICK;
+        public string Ffprobe;
+        public string Ffmpeg;
+        public string Magick;
 
-        public string TEMP = "";
-        public string SOURCES = "";
-        public string SOUNDS = "";
-        public string MUSIC = "";
-        public string RESOURCES = "";
+        public string Temp = "";
+        public string Sources = "";
+        public string Sounds = "";
+        public string Music = "";
+        public string Resources = "";
 
-        public string intro = "";
-        public string outro = "";
+        public string Intro = "";
+        public string Outro = "";
 
         /**
          * Return the length of a video (in seconds)
@@ -32,25 +27,21 @@ namespace YTPPlus
          * @param video input video filename to work with
          * @return Video length as a string (output from ffprobe)
          */
-        public string getVideoLength(string video)
+        public string GetVideoLength(string video)
         {
             try
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = FFPROBE;
-                startInfo.Arguments = "-v error"
-                        + " -sexagesimal"
-                        + " -show_entries format=duration"
-                        + " -of default=noprint_wrappers=1:nokey=1"
-                        + " \"" + video + "\"";
+                var process = new Process();
+                var startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = Ffprobe;
+                startInfo.Arguments =
+                    $"-v error -sexagesimal -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"{video}\"";
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
-                string s;
                 string errorText = null;
                 var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
@@ -62,7 +53,6 @@ namespace YTPPlus
                     var line = process.StandardOutput.ReadLine();
                     if (line == null)
                         break;
-                    s = line;
                     Console.WriteLine(line);
                 }
 
@@ -73,23 +63,20 @@ namespace YTPPlus
             catch (Exception ex) { Console.WriteLine(ex.StackTrace); return ""; }
         }
 
-        public string getLength(string file)
+        public string GetLength(string file)
         {
             try
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = FFPROBE;
-                startInfo.Arguments = "-i \"" + file
-                        + "\" -show_entries format=duration"
-                        + " -v quiet"
-                        + " -of csv=\"p=0\"";
+                var process = new Process();
+                var startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = Ffprobe;
+                startInfo.Arguments = $"-i \"{file}\" -show_entries format=duration -v quiet -of csv=\"p=0\"";
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
-                string s = "";
+                var s = "";
                 // Read stdout synchronously (on this thread)
 
                 while (true)
@@ -117,30 +104,23 @@ namespace YTPPlus
          * @param endTime start time (in TimeStamp format, e.g. new TimeStamp(seconds);)
          * @param output output video filename to save the snipped clip to
          */
-        public void snipVideo(string video, double startTime, double endTime, string output, int width, int height)
+        public void SnipVideo(string video, double startTime, double endTime, string output, int width, int height)
         {
             try
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = FFMPEG;
-                startInfo.Arguments = "-i \"" + video
-                        + "\" -ss " + startTime.ToString("0.#########################", new CultureInfo("en-US"))
-                        + " -to " + endTime.ToString("0.#########################", new CultureInfo("en-US"))
-                        + " -ac 1"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -y"
-                        + " " + output + ".mp4";
+                var process = new Process();
+                var startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = Ffmpeg;
+                startInfo.Arguments =
+                    $"-i \"{video}\" -ss {startTime.ToString("0.#########################", new CultureInfo("en-US"))} -to {endTime.ToString("0.#########################", new CultureInfo("en-US"))} -ac 1 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -y {output}.mp4";
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -159,7 +139,7 @@ namespace YTPPlus
 
                 if (process.HasExited && process.ExitCode == 1)
                 {
-                    Console.WriteLine("ERROR");
+                    Console.WriteLine(@"ERROR");
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.StackTrace); }
@@ -171,29 +151,23 @@ namespace YTPPlus
          * @param video input video filename to work with
          * @param output output video filename to save the snipped clip to
          */
-        public void copyVideo(String video, String output, int width, int height)
+        public void CopyVideo(string video, string output, int width, int height)
         {
             try
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = FFMPEG;
-                startInfo.Arguments = "-i \"" + video
-                        + "\" -ar 44100"
-                        + " -ac 1"
-                        //+ " -filter:v fps=fps=30,setsar=1:1"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -y"
-                        + " " + output + ".mp4";
+                var process = new Process();
+                var startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = Ffmpeg;
+                startInfo.Arguments =
+                    $"-i \"{video}\" -ar 44100 -ac 1 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -y {output}.mp4";
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -213,7 +187,7 @@ namespace YTPPlus
 
                 if (process.HasExited && process.ExitCode == 1)
                 {
-                    Console.WriteLine("ERROR");
+                    Console.WriteLine(@"ERROR");
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.StackTrace); }
@@ -225,33 +199,33 @@ namespace YTPPlus
          * @param count number of input videos to concatenate
          * @param out output video filename
          */
-        public void concatenateVideo(int count, string ou)
+        public void ConcatenateVideo(int count, string ou)
         {
             try
             {
                 if (File.Exists(ou))
                     File.Delete(ou);
 
-                string command1 = "";
+                var command1 = "";
 
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
-                    if (File.Exists(TEMP + "video" + i + ".mp4"))
+                    if (File.Exists($"{Temp}video{i}.mp4"))
                     {
-                        command1 += (" -i " + TEMP + "video" + i + ".mp4");
+                        command1 += (" -i " + Temp + "video" + i + ".mp4");
                     }
                 }
                 command1 += (" -filter_complex \"");
 
-                int realcount = 0;
-                for (int i = 0; i < count; i++)
+                var realcount = 0;
+                for (var i = 0; i < count; i++)
                 {
-                    if (File.Exists(TEMP + "video" + i + ".mp4"))
+                    if (File.Exists($"{Temp}video{i}.mp4"))
                     {
                         realcount += 1;
                     }
                 }
-                for (int i = 0; i < realcount; i++)
+                for (var i = 0; i < realcount; i++)
                 {
                     command1 += ("[" + i + ":v:0][" + i + ":a:0]");
                 }
@@ -260,10 +234,10 @@ namespace YTPPlus
                 command1 += ("concat=n=" + realcount + ":v=1:a=1[outv][outa]\" -map \"[outv]\" -map \"[outa]\" -y " + ou);
                 Console.WriteLine(command1);
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = FFMPEG;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = Ffmpeg;
                 startInfo.Arguments = command1;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -271,8 +245,7 @@ namespace YTPPlus
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)

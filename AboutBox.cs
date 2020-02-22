@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace YTPPlusPlus
 {
@@ -17,7 +18,7 @@ namespace YTPPlusPlus
             */
         }
 
-        private void labelCompanyName_Click(object sender, System.EventArgs e)
+        private void labelCompanyName_Click(object sender, EventArgs e)
         {
 
         }

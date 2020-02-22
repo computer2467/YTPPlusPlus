@@ -1,90 +1,72 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
-/**
-* TimeStamp class for YTP+
-*
-* @author benb
-* @author LimeQuartz
-*/
-namespace YTPPlus
+
+namespace YTPPlusPlus.YTPPlus
 {
     public class EffectsFactory
     {
-        public Utilities toolBox;
-        public Random rnd = new Random();
+        private readonly Utilities _toolBox;
+        private readonly Random _rnd = new Random();
 
         public EffectsFactory(Utilities utilities)
         {
-            this.toolBox = utilities;
+            _toolBox = utilities;
         }
-        public static double GetUnixEpoch(DateTime dateTime)
-        {
-            var unixTime = dateTime.ToUniversalTime() -
-                new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            return unixTime.TotalSeconds;
-        }
-        public string pickSound()
+        private string PickSound()
         {
-            string[] d = Directory.GetFiles(toolBox.SOUNDS, "*.mp3");
-            FileInfo file = new FileInfo(d[randomInt(0, d.Length - 1)]);
+            var d = Directory.GetFiles(_toolBox.Sounds, "*.mp3");
+            var file = new FileInfo(d[RandomInt(0, d.Length - 1)]);
             return file.Name;
         }
-        public string pickSource()
+        public string PickSource()
         {
-            string[] d = Directory.GetFiles(toolBox.SOURCES, "*.mp4");
+            var d = Directory.GetFiles(_toolBox.Sources, "*.mp4");
             Console.WriteLine(d.Length);
-            FileInfo file = new FileInfo(d[randomInt(0, d.Length - 1)]);
+            var file = new FileInfo(d[RandomInt(0, d.Length - 1)]);
             return file.Name;
         }
-        public string pickMusic()
+
+        private string PickMusic()
         {
-            string[] d = Directory.GetFiles(toolBox.MUSIC, "*.mp3");
-            FileInfo file = new FileInfo(d[randomInt(0, d.Length - 1)]);
+            var d = Directory.GetFiles(_toolBox.Music, "*.mp3");
+            var file = new FileInfo(d[RandomInt(0, d.Length - 1)]);
             return file.Name;
         }
         /* EFFECTS */
         public void effect_RandomSound(string video, int width, int height)
         {
-            Console.WriteLine("effect_RandomSound initiated");
+            Console.WriteLine(@"effect_RandomSound initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
 
-                string randomSound = pickSound();
+                var randomSound = PickSound();
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -i " + toolBox.SOUNDS + randomSound
-                        + " -filter_complex \"[1:a]volume=1,apad[A];[0:a][A]amerge[out]\""
-                        + " -ac 2"
-                        //+ " -c:v copy"
-
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-
-                        + " -map 0:v"
-                        + " -map [out]"
-                        + " -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -i {_toolBox.Sounds}{randomSound} -filter_complex \"[1:a]volume=1,apad[A];[0:a][A]amerge[out]\" -ac 2 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -map 0:v -map [out] -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -99,26 +81,25 @@ namespace YTPPlus
                 }
 
                 process.WaitForExit();
-                stderrThread.Join();
-
-                int exitValue = process.ExitCode;
+                stderrThread.Join(); 
                 File.Delete(temp);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_RandomSoundMute(string video, int width, int height)
         {
-            Console.WriteLine("effect_RandomSoundMute initiated");
+            Console.WriteLine(@"effect_RandomSoundMute initiated");
             try
             {
-                string randomSound = pickSound();
-                string soundLength = toolBox.getLength(toolBox.SOUNDS + randomSound);
-                Console.WriteLine("Doing a mute now. " + randomSound + " length: " + soundLength + ".");
-                FileInfo inVid = new FileInfo(video);
+                var randomSound = PickSound();
+                var soundLength = _toolBox.GetLength(_toolBox.Sounds + randomSound);
+                Console.WriteLine($@"Doing a mute now. {randomSound} length: {soundLength}.");
+                var inVid = new FileInfo(video);
 
-                string temp = toolBox.TEMP + "temp.mp4";
-                string temp2 = toolBox.TEMP + "temp2.mp4";
+                var temp = $"{_toolBox.Temp}temp.mp4";
+                var temp2 = $"{_toolBox.Temp}temp2.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
@@ -128,23 +109,23 @@ namespace YTPPlus
                 {
                     File.Delete(temp2);
                 }
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -af \"volume=0\" -y {_toolBox.Temp}temp2.mp4",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
 
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -af \"volume=0\" -y " + toolBox.TEMP + "temp2.mp4";
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var process1 = process;
+                var stderrThread = new Thread(() => { process1.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -161,27 +142,22 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
+                process = new Process();
+                startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp2.mp4 -i \"{_toolBox.Sounds}{randomSound}\" -to {soundLength} -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -filter_complex \"[1:a]volume=1,apad[A]; [0:a][A]amerge[out]\" -ac 2 -map 0:v -map [out] -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
 
-                process = new System.Diagnostics.Process();
-                startInfo = new System.Diagnostics.ProcessStartInfo();
-
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp2.mp4"
-                        + " -i \"" + toolBox.SOUNDS + "" + randomSound + "\""
-                        + " -to " + soundLength
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -filter_complex \"[1:a]volume=1,apad[A]; [0:a][A]amerge[out]\" -ac 2 -map 0:v -map [out] -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                errorText = null;
-                stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -197,27 +173,26 @@ namespace YTPPlus
 
                 process.WaitForExit();
                 stderrThread.Join();
-
-                exitValue = process.ExitCode;
 
                 File.Delete(temp);
                 File.Delete(temp2);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_Reverse(string video, int width, int height)
         {
-            Console.WriteLine("effect_Reverse initiated");
+            Console.WriteLine(@"effect_Reverse initiated");
             try
             {
-                string randomSound = pickSound();
-                string soundLength = toolBox.getLength(toolBox.SOUNDS + randomSound);
-                Console.WriteLine("Doing a mute now. " + randomSound + " length: " + soundLength + ".");
-                FileInfo inVid = new FileInfo(video);
+                var randomSound = PickSound();
+                var soundLength = _toolBox.GetLength(_toolBox.Sounds + randomSound);
+                Console.WriteLine($@"Doing a mute now. {randomSound} length: {soundLength}.");
+                var inVid = new FileInfo(video);
 
-                string temp = toolBox.TEMP + "temp.mp4";
-                string temp2 = toolBox.TEMP + "temp2.mp4";
+                var temp = $"{_toolBox.Temp}temp.mp4";
+                var temp2 = $"{_toolBox.Temp}temp2.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
@@ -227,23 +202,23 @@ namespace YTPPlus
                 {
                     File.Delete(temp2);
                 }
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -map 0 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -af \"areverse\" -y {_toolBox.Temp}temp2.mp4",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
 
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4 -map 0"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -af \"areverse\" -y " + toolBox.TEMP + "temp2.mp4";
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var process1 = process;
+                var stderrThread = new Thread(() => { process1.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -260,25 +235,22 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
+                process = new Process();
+                startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp2.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -vf reverse -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
 
-                process = new System.Diagnostics.Process();
-                startInfo = new System.Diagnostics.ProcessStartInfo();
-
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp2.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -vf reverse -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                errorText = null;
-                stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -294,45 +266,43 @@ namespace YTPPlus
 
                 process.WaitForExit();
                 stderrThread.Join();
-
-                exitValue = process.ExitCode;
 
                 File.Delete(temp);
                 File.Delete(temp2);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
         public void effect_SpeedUp(string video, int width, int height)
         {
-            Console.WriteLine("effect_SpeedUp initiated");
+            Console.WriteLine(@"effect_SpeedUp initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
 
-                string randomSound = pickSound();
+                PickSound();
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -filter:v setpts=0.5*PTS -filter:a atempo=2.0 -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -filter:v setpts=0.5*PTS -filter:a atempo=2.0 -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -349,43 +319,42 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
                 File.Delete(temp);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_SlowDown(string video, int width, int height)
         {
-            Console.WriteLine("effect_SlowDown initiated");
+            Console.WriteLine(@"effect_SlowDown initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
 
-                string randomSound = pickSound();
+                PickSound();
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -filter:v setpts=2*PTS -filter:a atempo=0.5 -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -filter:v setpts=2*PTS -filter:a atempo=0.5 -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -402,43 +371,42 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
                 File.Delete(temp);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_Chorus(string video, int width, int height)
         {
-            Console.WriteLine("effect_Chorus initiated");
+            Console.WriteLine(@"effect_Chorus initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
 
-                string randomSound = pickSound();
+                PickSound();
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -af chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3 -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -af chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3 -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -455,43 +423,42 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
                 File.Delete(temp);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_Vibrato(string video, int width, int height)
         {
-            Console.WriteLine("effect_Vibrato initiated");
+            Console.WriteLine(@"effect_Vibrato initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
 
-                string randomSound = pickSound();
+                PickSound();
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -af vibrato=f=7.0:d=0.5 -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -af vibrato=f=7.0:d=0.5 -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -508,43 +475,42 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
                 File.Delete(temp);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_LowPitch(string video, int width, int height)
         {
-            Console.WriteLine("effect_LowPitch initiated");
+            Console.WriteLine(@"effect_LowPitch initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
 
-                string randomSound = pickSound();
+                PickSound();
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -filter:v setpts=2*PTS -af asetrate=44100*0.5,aresample=44100 -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -filter:v setpts=2*PTS -af asetrate=44100*0.5,aresample=44100 -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -561,43 +527,42 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
                 File.Delete(temp);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_HighPitch(string video, int width, int height)
         {
-            Console.WriteLine("effect_HighPitch initiated");
+            Console.WriteLine(@"effect_HighPitch initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";
                 if (File.Exists(video))
                 {
                     File.Delete(temp);
                     inVid.MoveTo(temp);
                 }
 
-                string randomSound = pickSound();
+                PickSound();
 
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = toolBox.FFMPEG;
-                startInfo.Arguments = "-i " + toolBox.TEMP + "temp.mp4"
-                        + " -ar 44100"
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30"
-                        + " -filter:v setpts=0.5*PTS -af asetrate=44100*2,aresample=44100 -y " + video;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = _toolBox.Ffmpeg,
+                    Arguments =
+                        $"-i {_toolBox.Temp}temp.mp4 -ar 44100 -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30 -filter:v setpts=0.5*PTS -af asetrate=44100*2,aresample=44100 -y {video}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -614,25 +579,25 @@ namespace YTPPlus
                 process.WaitForExit();
                 stderrThread.Join();
 
-                int exitValue = process.ExitCode;
                 File.Delete(temp);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_Dance(string video, int width, int height)
         {
-            Console.WriteLine("effect_Dance initiated");
+            Console.WriteLine(@"effect_Dance initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";   //og file
-                string temp2 = toolBox.TEMP + "temp2.mp4"; //1st cut
-                string temp3 = toolBox.TEMP + "temp3.mp4"; //backwards (silent)
-                string temp4 = toolBox.TEMP + "temp4.mp4"; //forwards (silent)
-                string temp5 = toolBox.TEMP + "temp5.mp4"; //backwards & forwards concatenated
-                string temp6 = toolBox.TEMP + "temp6.mp4"; //backwards & forwards concatenated
-                string temp7 = toolBox.TEMP + "temp7.mp4"; //backwards & forwards concatenated (unused?)
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";   //og file
+                var temp2 = $"{_toolBox.Temp}temp2.mp4"; //1st cut
+                var temp3 = $"{_toolBox.Temp}temp3.mp4"; //backwards (silent)
+                var temp4 = $"{_toolBox.Temp}temp4.mp4"; //forwards (silent)
+                var temp5 = $"{_toolBox.Temp}temp5.mp4"; //backwards & forwards concatenated
+                var temp6 = $"{_toolBox.Temp}temp6.mp4"; //backwards & forwards concatenated
+                var temp7 = $"{_toolBox.Temp}temp7.mp4"; //backwards & forwards concatenated (unused?)
 
                 if (File.Exists(video))
                 {
@@ -664,68 +629,46 @@ namespace YTPPlus
                     File.Delete(temp7);
                 }
 
-                string randomSound = pickMusic();
+                var randomSound = PickMusic();
 
-                string[] commands = new string[6];
-                int randomTime = randomInt(3, 9);
-                int randomTime2 = randomInt(0, 1);
+                var commands = new string[6];
+                var randomTime = RandomInt(3, 9);
+                var randomTime2 = RandomInt(0, 1);
 
-                commands.SetValue("-i " + toolBox.TEMP + "temp.mp4 -map 0"// -c:v copy"
-                        + " -ar 44100"
-                        + " -to 00:00:0" + randomTime2 + "." + randomTime
-                        + " -vf scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1"
-                        + " -an"
-                        + " -y " + toolBox.TEMP + "temp2.mp4", 0);
+                commands.SetValue(
+                    $"-i {_toolBox.Temp}temp.mp4 -map 0 -ar 44100 -to 00:00:0{randomTime2}.{randomTime} -vf scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1 -an -y {_toolBox.Temp}temp2.mp4", 0);
 
-                commands.SetValue("-i " + toolBox.TEMP + "temp2.mp4 -map 0"// -c:v copy"
-                        + " -ar 44100"
-                        + " -vf reverse,scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1"
-                        + " -y " + toolBox.TEMP + "temp3.mp4", 1);
+                commands.SetValue(
+                    $"-i {_toolBox.Temp}temp2.mp4 -map 0 -ar 44100 -vf reverse,scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1 -y {_toolBox.Temp}temp3.mp4", 1);
 
-                commands.SetValue("-i " + toolBox.TEMP + "temp3.mp4"
-                        + " -ar 44100"
-                        + " -vf reverse,scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1"
-                        + " -y " + toolBox.TEMP + "temp4.mp4", 2);
+                commands.SetValue(
+                    $"-i {_toolBox.Temp}temp3.mp4 -ar 44100 -vf reverse,scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1 -y {_toolBox.Temp}temp4.mp4", 2);
 
-                commands.SetValue("-i " + toolBox.TEMP + "temp3.mp4"
-                        + " -i " + toolBox.TEMP + "temp4.mp4"
-                        + " -filter_complex \"[0:v:0][1:v:0][0:v:0][1:v:0][0:v:0][1:v:0][0:v:0][1:v:0]concat=n=8:v=1[outv]\""
-                        + " -map \"[outv]\""
-                        + " -c:v libx264 -shortest"
-                        + " -y " + toolBox.TEMP + "temp5.mp4", 3);
+                commands.SetValue(
+                    $"-i {_toolBox.Temp}temp3.mp4 -i {_toolBox.Temp}temp4.mp4 -filter_complex \"[0:v:0][1:v:0][0:v:0][1:v:0][0:v:0][1:v:0][0:v:0][1:v:0]concat=n=8:v=1[outv]\" -map \"[outv]\" -c:v libx264 -shortest -y {_toolBox.Temp}temp5.mp4", 3);
 
-                commands.SetValue("-i " + toolBox.TEMP + "temp5.mp4"
-                        + " -map 0"
-                        + " -ar 44100"
-                        + " -vf \"setpts=0.5*PTS,scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1\""
-                        + " -af \"atempo=2.0\""
-                        + " -shortest"
-                        + " -y " + toolBox.TEMP + "temp6.mp4", 4);
+                commands.SetValue(
+                    $"-i {_toolBox.Temp}temp5.mp4 -map 0 -ar 44100 -vf \"setpts=0.5*PTS,scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1\" -af \"atempo=2.0\" -shortest -y {_toolBox.Temp}temp6.mp4", 4);
 
-                commands.SetValue("-i " + toolBox.TEMP + "temp6.mp4"
-                        + " -i " + toolBox.MUSIC + randomSound
-                        + " -c:v libx264"
-                        + " -map 0:v:0 -map 1:a:0"
-                        + " -vf \"scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1,fps=fps=30\""
-                        + " -shortest"
-                        + " -y " + video, 5);
+                commands.SetValue(
+                    $"-i {_toolBox.Temp}temp6.mp4 -i {_toolBox.Music}{randomSound} -c:v libx264 -map 0:v:0 -map 1:a:0 -vf \"scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1,fps=fps=30\" -shortest -y {video}", 5);
 
-                int exitValue;
-                foreach (string cmd in commands)
+                foreach (var cmd in commands)
                 {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                    startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                    startInfo.FileName = toolBox.FFMPEG;
-                    startInfo.Arguments = cmd;
-                    startInfo.UseShellExecute = false;
-                    startInfo.RedirectStandardOutput = true;
+                    var process = new Process();
+                    var startInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = _toolBox.Ffmpeg,
+                        Arguments = cmd,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true
+                    };
                     process.StartInfo = startInfo;
                     process.Start();
                     // Read stderr synchronously (on another thread)
 
-                    string errorText = null;
-                    var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                    var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                     stderrThread.Start();
 
                     // Read stdout synchronously (on this thread)
@@ -741,7 +684,6 @@ namespace YTPPlus
 
                     process.WaitForExit();
                     stderrThread.Join();
-                    exitValue = process.ExitCode;
                 }
 
                 File.Delete(temp);
@@ -752,22 +694,23 @@ namespace YTPPlus
                 File.Delete(temp6);
                 File.Delete(temp7);
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
         public void effect_Squidward(string video, int width, int height)
         {
-            Console.WriteLine("effect_Squidward initiated");
+            Console.WriteLine(@"effect_Squidward initiated");
             try
             {
-                FileInfo inVid = new FileInfo(video);
-                string temp = toolBox.TEMP + "temp.mp4";   //og file
-                string temp2 = toolBox.TEMP + "temp2.mp4"; //1st cut
-                string temp3 = toolBox.TEMP + "temp3.mp4"; //backwards (silent)
-                string temp4 = toolBox.TEMP + "temp4.mp4"; //forwards (silent)
-                string temp5 = toolBox.TEMP + "temp5.mp4"; //backwards & forwards concatenated
-                string temp6 = toolBox.TEMP + "temp6.mp4"; //backwards & forwards concatenated
-                string temp7 = toolBox.TEMP + "temp7.mp4"; //backwards & forwards concatenated (unused?)
+                var inVid = new FileInfo(video);
+                var temp = $"{_toolBox.Temp}temp.mp4";   //og file
+                var temp2 = $"{_toolBox.Temp}temp2.mp4"; //1st cut
+                var temp3 = $"{_toolBox.Temp}temp3.mp4"; //backwards (silent)
+                var temp4 = $"{_toolBox.Temp}temp4.mp4"; //forwards (silent)
+                var temp5 = $"{_toolBox.Temp}temp5.mp4"; //backwards & forwards concatenated
+                var temp6 = $"{_toolBox.Temp}temp6.mp4"; //backwards & forwards concatenated
+                var temp7 = $"{_toolBox.Temp}temp7.mp4"; //backwards & forwards concatenated (unused?)
 
                 if (File.Exists(video))
                 {
@@ -799,20 +742,18 @@ namespace YTPPlus
                     File.Delete(temp7);
                 }
 
-                string randomSound = pickMusic();
+                PickMusic();
 
-                string[] commands = new string[8];
-                string[] args = new string[8];
-                commands.SetValue(toolBox.FFMPEG, 0);
-                args.SetValue("-i " + toolBox.TEMP + "temp.mp4"// -c:v copy"
-                        + " -vf \"select=gte(n\\,1)\""
-                        + " -vframes 1"
-                        + " -y " + toolBox.TEMP + "squidward0.png", 0);
+                var commands = new string[8];
+                var args = new string[8];
+                commands.SetValue(_toolBox.Ffmpeg, 0);
+                args.SetValue(
+                    $"-i {_toolBox.Temp}temp.mp4 -vf \"select=gte(n\\,1)\" -vframes 1 -y {_toolBox.Temp}squidward0.png", 0);
 
-                for (int i = 1; i < 6; i++)
+                for (var i = 1; i < 6; i++)
                 {
-                    string effect = "";
-                    int random = randomInt(0, 6);
+                    var effect = "";
+                    var random = RandomInt(0, 6);
                     switch (random)
                     {
                         case 0:
@@ -822,16 +763,16 @@ namespace YTPPlus
                             effect = " -flip";
                             break;
                         case 2:
-                            effect = " -implode -" + randomInt(1, 3);
+                            effect = $" -implode -{RandomInt(1, 3)}";
                             break;
                         case 3:
-                            effect = " -implode " + randomInt(1, 3);
+                            effect = $" -implode {RandomInt(1, 3)}";
                             break;
                         case 4:
-                            effect = " -swirl " + randomInt(1, 180);
+                            effect = $" -swirl {RandomInt(1, 180)}";
                             break;
                         case 5:
-                            effect = " -swirl -" + randomInt(1, 180);
+                            effect = $" -swirl -{RandomInt(1, 180)}";
                             break;
                         case 6:
                             effect = " -channel RGB -negate";
@@ -840,18 +781,17 @@ namespace YTPPlus
                             //    effect = " -virtual-pixel Black +distort Cylinder2Plane " + randomInt(1,90);
                             //    break;
                     }
-                    commands.SetValue(toolBox.MAGICK, i);
-                    args.SetValue("convert " + toolBox.TEMP + "squidward0.png"
-                            + effect
-                            + " " + toolBox.TEMP + "squidward" + i + ".png", i
+                    commands.SetValue(_toolBox.Magick, i);
+                    args.SetValue($"convert {_toolBox.Temp}squidward0.png{effect} {_toolBox.Temp}squidward{i}.png", i
                     );
                 }
-                commands.SetValue(toolBox.MAGICK, 6);
-                args.SetValue("convert -size " + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + " canvas:black " + toolBox.TEMP + "black.png", 6);
+                commands.SetValue(_toolBox.Magick, 6);
+                args.SetValue(
+                    $"convert -size {width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))} canvas:black {_toolBox.Temp}black.png", 6);
 
-                if (File.Exists(toolBox.TEMP + "concatsquidward.txt"))
-                    File.Delete(toolBox.TEMP + "concatsquidward.txt");
-                StreamWriter writer = new StreamWriter(toolBox.TEMP + "concatsquidward.txt");
+                if (File.Exists($"{_toolBox.Temp}concatsquidward.txt"))
+                    File.Delete($"{_toolBox.Temp}concatsquidward.txt");
+                var writer = new StreamWriter($"{_toolBox.Temp}concatsquidward.txt");
                 writer.Write
                             ("file 'squidward0.png'\n" +
                             "duration 0.467\n" +
@@ -868,22 +808,16 @@ namespace YTPPlus
                             "file 'squidward5.png'\n" +
                             "duration 0.467");
                 writer.Close();
-                commands.SetValue(toolBox.FFMPEG, 7);
-                args.SetValue("-f concat"
-                        + " -i " + toolBox.TEMP + "concatsquidward.txt"
-                        + " -i " + toolBox.RESOURCES + "squidward/music.wav"
-                        + " -map 0:v:0 -map 1:a:0"
-                        + " -vf \"scale=" + width.ToString("0.#########################", new CultureInfo("en-US")) + "x" + height.ToString("0.#########################", new CultureInfo("en-US")) + ",setsar=1:1\""
-                        + " -pix_fmt yuv420p"
-                        + " -y " + video, 7);
+                commands.SetValue(_toolBox.Ffmpeg, 7);
+                args.SetValue(
+                    $"-f concat -i {_toolBox.Temp}concatsquidward.txt -i {_toolBox.Resources}squidward/music.wav -map 0:v:0 -map 1:a:0 -vf \"scale={width.ToString("0.#########################", new CultureInfo("en-US"))}x{height.ToString("0.#########################", new CultureInfo("en-US"))},setsar=1:1\" -pix_fmt yuv420p -y {video}", 7);
 
                 //string command = "lib/ffmpeg -i " + toolBox.TEMP + "temp.mp4 -i sounds/"+randomSound+" -c:v copy -map 0:v:0 -map 1:a:0 -shortest "+ video;
-                int exitValue;
-                for (int i = 0; i < commands.Length; i++)
+                for (var i = 0; i < commands.Length; i++)
                 {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                    startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    var process = new Process();
+                    var startInfo = new ProcessStartInfo();
+                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     startInfo.FileName = commands[i];
                     startInfo.Arguments = args[i];
                     startInfo.UseShellExecute = false;
@@ -892,8 +826,7 @@ namespace YTPPlus
                     process.Start();
                     // Read stderr synchronously (on another thread)
 
-                    string errorText = null;
-                    var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                    var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                     stderrThread.Start();
 
                     // Read stdout synchronously (on this thread)
@@ -909,18 +842,18 @@ namespace YTPPlus
 
                     process.WaitForExit();
                     stderrThread.Join();
-                    exitValue = process.ExitCode;
                 }
 
                 File.Delete(temp);
-                for (int i = 0; i < 6; i++)
+                for (var i = 0; i < 6; i++)
                 {
-                    File.Delete(toolBox.TEMP + "squidward" + i + ".png");
+                    File.Delete($"{_toolBox.Temp}squidward{i}.png");
                 }
-                File.Delete(toolBox.TEMP + "black.png");
-                File.Delete(toolBox.TEMP + "concatsquidward.txt");
+                File.Delete($"{_toolBox.Temp}black.png");
+                File.Delete($"{_toolBox.Temp}concatsquidward.txt");
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
         /*public void effect_RainbowTrail(string video, int width, int height, double startOfClip, double endOfClip)
         {
@@ -1019,22 +952,24 @@ namespace YTPPlus
 
         public void effect_Plugin(string video, int width, int height, string plugin, double startOfClip, double endOfClip)
         {
-            Console.WriteLine(plugin+" initiated");
+            Console.WriteLine($@"{plugin} initiated");
             try
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = plugin;
-                startInfo.Arguments = video + " " + width + " " + height + " " + toolBox.TEMP + " " + toolBox.FFMPEG + " " + toolBox.FFPROBE + " " + toolBox.MAGICK + " " + toolBox.RESOURCES + " " + toolBox.SOUNDS + " " + toolBox.SOURCES + " " + toolBox.MUSIC + " " + startOfClip.ToString("0.#########################", new CultureInfo("en-US")) + " " + endOfClip.ToString("0.#########################", new CultureInfo("en-US"));
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = plugin,
+                    Arguments =
+                        $"{video} {width} {height} {_toolBox.Temp} {_toolBox.Ffmpeg} {_toolBox.Ffprobe} {_toolBox.Magick} {_toolBox.Resources} {_toolBox.Sounds} {_toolBox.Sources} {_toolBox.Music} {startOfClip.ToString("0.#########################", new CultureInfo("en-US"))} {endOfClip.ToString("0.#########################", new CultureInfo("en-US"))}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
                 // Read stderr synchronously (on another thread)
 
-                string errorText = null;
-                var stderrThread = new Thread(() => { errorText = process.StandardOutput.ReadToEnd(); });
+                var stderrThread = new Thread(() => { process.StandardOutput.ReadToEnd(); });
                 stderrThread.Start();
 
                 // Read stdout synchronously (on this thread)
@@ -1050,15 +985,14 @@ namespace YTPPlus
 
                 process.WaitForExit();
                 stderrThread.Join();
-
-                int exitValue = process.ExitCode;
             }
-            catch (Exception ex) { Console.WriteLine("effect" + "\n" + ex); }
+            catch (Exception ex) { Console.WriteLine($@"effect
+{ex}"); }
         }
 
-        public int randomInt(int min, int max)
+        private int RandomInt(int min, int max)
         {
-            return rnd.Next((max - min) + 1) + min;
+            return _rnd.Next((max - min) + 1) + min;
             //return new Random((int)GetUnixEpoch(DateTime.UtcNow)).Next((max - min) + 1) + min;
         }
     }

@@ -5,248 +5,186 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 
-namespace YTPPlus
+namespace YTPPlusPlus.YTPPlus
 {
     public class YTPGenerator
     {
-        public double MAX_STREAM_DURATION = 0.4; //default: 2s
-        public double MIN_STREAM_DURATION = 0.2; //default: 0.2s
-        public int MAX_CLIPS = 20; //default: 5 clips
-        public string INPUT_FILE; //Input video file
-        public string OUTPUT_FILE; //the video file that will be produced in the end
+        private double _maxStreamDuration = 0.4; //default: 2s
+        private double _minStreamDuration = 0.2; //default: 0.2s
+        private int _maxClips = 20; //default: 5 clips
+        private readonly string _outputFile; //the video file that will be produced in the end
 
-        public bool failed = false; //if the application has failed
-        public Exception exc; //set when the application fails to give more information
+        public bool Failed; //if the application has failed
+        public Exception Exc; //set when the application fails to give more information
 
-        public bool effect1;
-        public bool effect2;
-        public bool effect3;
-        public bool effect4;
-        public bool effect5;
-        public bool effect6;
-        public bool effect7;
-        public bool effect8;
-        public bool effect9;
-        public bool effect10;
-        public bool effect11;
-        public bool effect12;
+        public bool Effect1;
+        public bool Effect2;
+        public bool Effect3;
+        public bool Effect4;
+        public bool Effect5;
+        public bool Effect6;
+        public bool Effect7;
+        public bool Effect8;
+        public bool Effect9;
+        public bool Effect10;
+        public bool Effect11;
+        public bool Effect12;
 
-        public bool pluginTest = false;
-        public int pluginCount = 0;
-        public List<string> plugins = new List<string>();
+        public bool PluginTest;
+        public int PluginCount;
+        public List<string> Plugins = new List<string>();
 
-        public bool insertTransitionClips;
+        public bool InsertTransitionClips;
 
-        public int width = 640;
-        public int height = 480;
-        public bool intro = false;
-        public bool outro = true;
+        public int Width = 640;
+        public int Height = 480;
+        public bool Intro;
+        public bool Outro = true;
 
-        public Utilities toolBox = new Utilities();
+        public readonly Utilities ToolBox = new Utilities();
 
-        public void configurate()
-        {
-            //add some code to load this from a .cfg file later
-            toolBox.FFMPEG = "ffmpeg";
-            toolBox.FFPROBE = "ffprobe";
-            toolBox.MAGICK = "magick ";
-            toolBox.TEMP = "temp/" + "job_" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + "\\";
-            Directory.CreateDirectory(toolBox.TEMP);
-            toolBox.SOURCES = "sources/";
-            toolBox.SOUNDS = "sounds/";
-            toolBox.MUSIC = "music/";
-            toolBox.RESOURCES = "resources/";
-
-            effect1 = true;
-            effect2 = true;
-            effect3 = true;
-            effect4 = true;
-            effect5 = true;
-            effect6 = true;
-            effect7 = true;
-            effect8 = true;
-            effect9 = true;
-            effect10 = true;
-            effect11 = true;
-            effect12 = true;
-
-            pluginTest = false;
-            pluginCount = 0;
-            plugins = new List<string>();
-
-            insertTransitionClips = true;
-
-            width = 640;
-            height = 480;
-            intro = false;
-            outro = true;
-        }
-
-        EffectsFactory effectsFactory;
-        ArrayList sourceList = new ArrayList();
-        public bool done = false;
-        public decimal doneCount = 0;
-
+        private EffectsFactory _effectsFactory;
+        private readonly ArrayList _sourceList = new ArrayList();
+        //private bool _done;
+        
         public YTPGenerator(string output)
         {
-            this.OUTPUT_FILE = output;
+            _outputFile = output;
             //configurate();
+        }
+        
+        public void SetMaxClips(int clips)
+        {
+            _maxClips = clips;
+        }
+        public void SetMinDuration(double min)
+        {
+            _minStreamDuration = min;
+        }
+        public void SetMaxDuration(double max)
+        {
+            _maxStreamDuration = max;
         }
 
-        public YTPGenerator(String output, double min, double max)
+        public void AddSource(string sourceName)
         {
-            this.OUTPUT_FILE = output;
-            this.MIN_STREAM_DURATION = min;
-            this.MAX_STREAM_DURATION = max;
-            //configurate();
-        }
-        public YTPGenerator(String output, double min, double max, int maxclips)
-        {
-            this.OUTPUT_FILE = output;
-            this.MIN_STREAM_DURATION = min;
-            this.MAX_STREAM_DURATION = max;
-            this.MAX_CLIPS = maxclips;
-            //configurate();
-        }
-        public YTPGenerator(String output, double min, double max, int maxclips, int width, int height)
-        {
-            this.OUTPUT_FILE = output;
-            this.MIN_STREAM_DURATION = min;
-            this.MAX_STREAM_DURATION = max;
-            this.MAX_CLIPS = maxclips;
-            this.width = width;
-            this.height = height;
-            //configurate();
-        }
-        public void setMaxClips(int clips)
-        {
-            this.MAX_CLIPS = clips;
-        }
-        public void setMinDuration(double min)
-        {
-            this.MIN_STREAM_DURATION = min;
-        }
-        public void setMaxDuration(double max)
-        {
-            this.MAX_STREAM_DURATION = max;
+            _sourceList.Add(sourceName);
         }
 
-        public void addSource(String sourceName)
-        {
-            sourceList.Add(sourceName);
-        }
-        public BackgroundWorker vidThreadWorker = new BackgroundWorker();
+        private readonly BackgroundWorker _vidThreadWorker = new BackgroundWorker();
 
-        public void vidThread(object sender, DoWorkEventArgs e)
+        private void VidThread(object sender, DoWorkEventArgs e)
         {
-            if (sourceList.Count == 0)
+            if (_sourceList.Count == 0)
             {
-                Console.WriteLine("No sources added...");
+                Console.WriteLine(@"No sources added...");
                 return;
             }
 
-            Console.WriteLine("poop_1");
+            Console.WriteLine(@"poop_1");
 
-            if (File.Exists(OUTPUT_FILE))
-                File.Delete(OUTPUT_FILE);
+            if (File.Exists(_outputFile))
+                File.Delete(_outputFile);
 
             try
             {
-                Directory.CreateDirectory(toolBox.TEMP);
-                int endofclips = MAX_CLIPS - 1;
-                failed = false;
-                for (int i = 0; i < MAX_CLIPS; i++)
+                Directory.CreateDirectory(ToolBox.Temp);
+                Failed = false;
+                for (var i = 0; i < _maxClips; i++)
                 {
-                    if (i == 0 && intro)
+                    if (i == 0 && Intro)
                     {
-                        MAX_CLIPS++;
-                        Console.WriteLine("Intro clip enabled, adding 1 to max clips. New max clips is " + MAX_CLIPS + ".");
-                        Console.WriteLine("Done: " + Decimal.Divide(i, MAX_CLIPS));
-                        vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(i, MAX_CLIPS) * 100, new CultureInfo("en-US")));
-                        Console.WriteLine(toolBox.intro);
-                        Console.WriteLine("STARTING CLIP " + "video" + i);
-                        toolBox.copyVideo(toolBox.intro, toolBox.TEMP + "video" + i, width, height);
+                        _maxClips++;
+                        Console.WriteLine($@"Intro clip enabled, adding 1 to max clips. New max clips is {_maxClips}.");
+                        Console.WriteLine($@"Done: {decimal.Divide(i, _maxClips)}");
+                        _vidThreadWorker.ReportProgress(Convert.ToInt32(decimal.Divide(i, _maxClips) * 100, new CultureInfo("en-US")));
+                        Console.WriteLine(ToolBox.Intro);
+                        Console.WriteLine($@"STARTING CLIP video{i}");
+                        ToolBox.CopyVideo(ToolBox.Intro, $"{ToolBox.Temp}video{i}", Width, Height);
                     }
                     else
                     {
-                        Console.WriteLine("Done: " + Decimal.Divide(i, MAX_CLIPS));
-                        vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(i, MAX_CLIPS) * 100, new CultureInfo("en-US")));
-                        string sourceToPick = sourceList[randomInt(0, sourceList.Count - 1)].ToString();
+                        Console.WriteLine($@"Done: {decimal.Divide(i, _maxClips)}");
+                        _vidThreadWorker.ReportProgress(Convert.ToInt32(decimal.Divide(i, _maxClips) * 100, new CultureInfo("en-US")));
+                        var sourceToPick = _sourceList[RandomInt(0, _sourceList.Count - 1)].ToString();
                         Console.WriteLine(sourceToPick);
                         
-                        decimal source = decimal.Parse(toolBox.getLength(sourceToPick), NumberStyles.Any, new CultureInfo("en-US"));
-                        string output = source.ToString("0.#########################", new CultureInfo("en-US"));
-                        Console.WriteLine(toolBox.getLength(sourceToPick) + " -> " + output + " -> " + double.Parse(output, NumberStyles.Any, new CultureInfo("en-US")));
-                        double boy = double.Parse(output, NumberStyles.Any, new CultureInfo("en-US"));
+                        var source = decimal.Parse(ToolBox.GetLength(sourceToPick), NumberStyles.Any, new CultureInfo("en-US"));
+                        var output = source.ToString("0.#########################", new CultureInfo("en-US"));
+                        Console.WriteLine(
+                            $@"{ToolBox.GetLength(sourceToPick)} -> {output} -> {double.Parse(output, NumberStyles.Any, new CultureInfo("en-US"))}");
+                        var boy = double.Parse(output, NumberStyles.Any, new CultureInfo("en-US"));
                         Console.WriteLine(boy);
-                        Console.WriteLine("STARTING CLIP " + "video" + i);
-                        double startOfClip = randomDouble(0.0, boy - MAX_STREAM_DURATION);
+                        Console.WriteLine($@"STARTING CLIP video{i}");
+                        var startOfClip = RandomDouble(0.0, boy - _maxStreamDuration);
                         //Console.WriteLine("boy seconds = "+  boy.getLengthSec());
-                        double endOfClip = startOfClip + randomDouble(MIN_STREAM_DURATION, MAX_STREAM_DURATION);
-                        Console.WriteLine("Beginning of clip " + i + ": " + startOfClip.ToString("0.#########################", new CultureInfo("en-US")));
-                        Console.WriteLine("Ending of clip " + i + ": " + endOfClip.ToString("0.#########################", new CultureInfo("en-US")) + ", in seconds: ");
-                        if (randomInt(0, 15 + pluginCount) == 15 && insertTransitionClips == true)
+                        var endOfClip = startOfClip + RandomDouble(_minStreamDuration, _maxStreamDuration);
+                        Console.WriteLine(
+                            $@"Beginning of clip {i}: {startOfClip.ToString("0.#########################", new CultureInfo("en-US"))}");
+                        Console.WriteLine(
+                            $@"Ending of clip {i}: {endOfClip.ToString("0.#########################", new CultureInfo("en-US"))}, in seconds: ");
+                        if (RandomInt(0, 15 + PluginCount) == 15 && InsertTransitionClips)
                         {
-                            Console.WriteLine("Tryina use a diff source");
-                            toolBox.copyVideo(toolBox.SOURCES + effectsFactory.pickSource(), toolBox.TEMP + "video" + i, width, height);
+                            Console.WriteLine(@"Tryina use a diff source");
+                            ToolBox.CopyVideo(ToolBox.Sources + _effectsFactory.PickSource(), $"{ToolBox.Temp}video{i}", Width, Height);
                         }
                         else
                         {
-                            toolBox.snipVideo(sourceToPick, startOfClip, endOfClip, toolBox.TEMP + "video" + i, width, height);
+                            ToolBox.SnipVideo(sourceToPick, startOfClip, endOfClip, $"{ToolBox.Temp}video{i}", Width, Height);
                         }
                         //Add a random effect to the video
-                        int effect = giveProbability(0, 15 + pluginCount);
-                        if (pluginTest)
+                        var effect = GiveProbability(0, 15 + PluginCount);
+                        if (PluginTest)
                             effect = 16;
-                        Console.WriteLine("STARTING EFFECT ON CLIP " + i + " EFFECT" + effect);
-                        String clipToWorkWith = toolBox.TEMP + "video" + i + ".mp4";
+                        Console.WriteLine($@"STARTING EFFECT ON CLIP {i} EFFECT{effect}");
+                        var clipToWorkWith = $"{ToolBox.Temp}video{i}.mp4";
                         switch (effect)
                         {
                             case 1:
                                 //random sound
-                                if (effect1 == true)
-                                    effectsFactory.effect_RandomSound(clipToWorkWith, width, height);
+                                if (Effect1)
+                                    _effectsFactory.effect_RandomSound(clipToWorkWith, Width, Height);
                                 break;
                             case 2:
-                                if (effect2 == true)
+                                if (Effect2)
                                     //random sound
-                                    effectsFactory.effect_RandomSoundMute(clipToWorkWith, width, height);
+                                    _effectsFactory.effect_RandomSoundMute(clipToWorkWith, Width, Height);
                                 break;
                             case 3:
-                                if (effect3 == true)
-                                    effectsFactory.effect_Reverse(clipToWorkWith, width, height);
+                                if (Effect3)
+                                    _effectsFactory.effect_Reverse(clipToWorkWith, Width, Height);
                                 break;
                             case 4:
-                                if (effect4 == true)
-                                    effectsFactory.effect_SpeedUp(clipToWorkWith, width, height);
+                                if (Effect4)
+                                    _effectsFactory.effect_SpeedUp(clipToWorkWith, Width, Height);
                                 break;
                             case 5:
-                                if (effect5 == true)
-                                    effectsFactory.effect_SlowDown(clipToWorkWith, width, height);
+                                if (Effect5)
+                                    _effectsFactory.effect_SlowDown(clipToWorkWith, Width, Height);
                                 break;
                             case 6:
-                                if (effect6 == true)
-                                    effectsFactory.effect_Chorus(clipToWorkWith, width, height);
+                                if (Effect6)
+                                    _effectsFactory.effect_Chorus(clipToWorkWith, Width, Height);
                                 break;
                             case 7:
-                                if (effect7 == true)
-                                    effectsFactory.effect_Vibrato(clipToWorkWith, width, height);
+                                if (Effect7)
+                                    _effectsFactory.effect_Vibrato(clipToWorkWith, Width, Height);
                                 break;
                             case 8:
-                                if (effect8 == true)
-                                    effectsFactory.effect_HighPitch(clipToWorkWith, width, height);
+                                if (Effect8)
+                                    _effectsFactory.effect_HighPitch(clipToWorkWith, Width, Height);
                                 break;
                             case 9:
-                                if (effect9 == true)
-                                    effectsFactory.effect_LowPitch(clipToWorkWith, width, height);
+                                if (Effect9)
+                                    _effectsFactory.effect_LowPitch(clipToWorkWith, Width, Height);
                                 break;
                             case 10:
-                                if (effect10 == true)
-                                    effectsFactory.effect_Dance(clipToWorkWith, width, height);
+                                if (Effect10)
+                                    _effectsFactory.effect_Dance(clipToWorkWith, Width, Height);
                                 break;
                             case 11:
-                                if (effect11 == true)
-                                    effectsFactory.effect_Squidward(clipToWorkWith, width, height);
+                                if (Effect11)
+                                    _effectsFactory.effect_Squidward(clipToWorkWith, Width, Height);
                                 break;
                             /*case 12:
                                 if (effect12 == true)
@@ -257,25 +195,25 @@ namespace YTPPlus
                             default:
                                 if (effect > 15)
                                 {
-                                    if (effect <= 15+pluginCount)
+                                    if (effect <= 15+PluginCount)
                                     {
-                                        effectsFactory.effect_Plugin(clipToWorkWith, width, height, plugins[rnd.Next(plugins.Count)], startOfClip, endOfClip);
+                                        _effectsFactory.effect_Plugin(clipToWorkWith, Width, Height, Plugins[Rnd.Next(Plugins.Count)], startOfClip, endOfClip);
                                     }
                                 }
                                 break;
                         }
                     }
                 }
-                if (outro)
+                if (Outro)
                 {
-                    MAX_CLIPS++;
-                    Console.WriteLine("Outro clip enabled.");
-                    Console.WriteLine("Done: " + Decimal.Divide(MAX_CLIPS - 1, MAX_CLIPS));
-                    vidThreadWorker.ReportProgress(Convert.ToInt32(Decimal.Divide(MAX_CLIPS - 1, MAX_CLIPS) * 100, new CultureInfo("en-US")));
-                    Console.WriteLine(toolBox.outro);
-                    Console.WriteLine("STARTING CLIP " + "video" + MAX_CLIPS);
-                    toolBox.copyVideo(toolBox.outro, toolBox.TEMP + "video" + MAX_CLIPS, width, height);
-                    MAX_CLIPS++;
+                    _maxClips++;
+                    Console.WriteLine(@"Outro clip enabled.");
+                    Console.WriteLine($@"Done: {decimal.Divide(_maxClips - 1, _maxClips)}");
+                    _vidThreadWorker.ReportProgress(Convert.ToInt32(decimal.Divide(_maxClips - 1, _maxClips) * 100, new CultureInfo("en-US")));
+                    Console.WriteLine(ToolBox.Outro);
+                    Console.WriteLine($@"STARTING CLIP video{_maxClips}");
+                    ToolBox.CopyVideo(ToolBox.Outro, $"{ToolBox.Temp}video{_maxClips}", Width, Height);
+                    _maxClips++;
                 }
                 /*for (int i = 0; i < MAX_CLIPS; i++)
                 {
@@ -285,57 +223,43 @@ namespace YTPPlus
                     }
                 }*/
                 //Thread.sleep(10000);
-                toolBox.concatenateVideo(MAX_CLIPS, OUTPUT_FILE);
+                ToolBox.ConcatenateVideo(_maxClips, _outputFile);
                 //Thread.sleep(4000);
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
-                exc = ex;
-                failed = true;
+                Exc = ex;
+                Failed = true;
             }
             //for (int i=0; i<100; i++) {
-            cleanUp();
-            rmDir(toolBox.TEMP);
+            CleanUp();
+            RmDir(ToolBox.Temp);
         }
-        void vidThreadWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+
+        public YTPGenerator Go(ProgressChangedEventHandler progressReporter, RunWorkerCompletedEventHandler completedReporter)
         {
-            // This function fires on the UI thread so it's safe to edit
-            // the UI control directly, no funny business with Control.Invoke :)
-            // Update the progressBar with the integer supplied to us from the
-            // ReportProgress() function.
-            doneCount = e.ProgressPercentage;
-        }
-        void vidThreadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            done = true;
-        }
-        public YTPGenerator go(ProgressChangedEventHandler progressReporter, RunWorkerCompletedEventHandler completedReporter)
-        {
-            effectsFactory = new EffectsFactory(toolBox); //hacky but works
-            Console.WriteLine("My FFMPEG is: " + toolBox.FFMPEG);
-            Console.WriteLine("My FFPROBE is: " + toolBox.FFPROBE);
-            Console.WriteLine("My MAGICK is: " + toolBox.MAGICK);
-            Console.WriteLine("My TEMP is: " + toolBox.TEMP);
-            Console.WriteLine("My SOUNDS is: " + toolBox.SOUNDS);
-            Console.WriteLine("My SOURCES is: " + toolBox.SOURCES);
-            Console.WriteLine("My MUSIC is: " + toolBox.MUSIC);
-            Console.WriteLine("My RESOURCES is: " + toolBox.RESOURCES);
-            vidThreadWorker.DoWork += new DoWorkEventHandler(vidThread);
-            vidThreadWorker.WorkerReportsProgress = true;
-            vidThreadWorker.WorkerSupportsCancellation = true;
-            vidThreadWorker.ProgressChanged += progressReporter;
-            vidThreadWorker.RunWorkerCompleted += completedReporter;
-            vidThreadWorker.RunWorkerAsync();
+            _effectsFactory = new EffectsFactory(ToolBox); //hacky but works
+            Console.WriteLine($@"My FFMPEG is: {ToolBox.Ffmpeg}");
+            Console.WriteLine($@"My FFPROBE is: {ToolBox.Ffprobe}");
+            Console.WriteLine($@"My MAGICK is: {ToolBox.Magick}");
+            Console.WriteLine($@"My TEMP is: {ToolBox.Temp}");
+            Console.WriteLine($@"My SOUNDS is: {ToolBox.Sounds}");
+            Console.WriteLine($@"My SOURCES is: {ToolBox.Sources}");
+            Console.WriteLine($@"My MUSIC is: {ToolBox.Music}");
+            Console.WriteLine($@"My RESOURCES is: {ToolBox.Resources}");
+            _vidThreadWorker.DoWork += VidThread;
+            _vidThreadWorker.WorkerReportsProgress = true;
+            _vidThreadWorker.WorkerSupportsCancellation = true;
+            _vidThreadWorker.ProgressChanged += progressReporter;
+            _vidThreadWorker.RunWorkerCompleted += completedReporter;
+            _vidThreadWorker.RunWorkerAsync();
             return this;
         }
 
 
-        public bool isDone()
-        {
-            return done;
-        }
+
         public static double GetUnixEpoch(DateTime dateTime)
         {
             var unixTime = dateTime.ToUniversalTime() -
@@ -343,23 +267,26 @@ namespace YTPPlus
 
             return unixTime.TotalSeconds;
         }
-        public Random rnd = new Random();
-        public double randomDouble(double min, double max)
+        public Random Rnd = new Random();
+
+
+
+        public double RandomDouble(double min, double max)
         {
             double finalVal = -1;
             while (finalVal < 0)
             {
-                double x = (rnd.NextDouble() * ((max - min) + 0)) + min;
+                var x = (Rnd.NextDouble() * ((max - min) + 0)) + min;
                 finalVal = Math.Round(x * 100.0) / 100.0;
             }
             return finalVal;
         }
-        public int randomInt(int min, int max)
+        public int RandomInt(int min, int max)
         {
-            return rnd.Next((max - min) + 1) + min;
+            return Rnd.Next((max - min) + 1) + min;
             //return new Random((int)GetUnixEpoch(DateTime.UtcNow)).Next((max - min) + 1) + min;
         }
-        public int giveProbability(int min, int max) //still unfinished
+        public int GiveProbability(int min, int max) //still unfinished
         {
             /*
             int roll = rnd.Next(0,1);
@@ -378,28 +305,28 @@ namespace YTPPlus
             }
             Console.WriteLine(completedRoll);*/
             //return completedRoll;
-            return rnd.Next((max - min) + 1) + min;
+            return Rnd.Next((max - min) + 1) + min;
             //return new Random((int)GetUnixEpoch(DateTime.UtcNow)).Next((max - min) + 1) + min;
         }
 
 
-        public void cleanUp()
+        public void CleanUp()
         {
-            if (File.Exists(toolBox.TEMP + "temp.mp4"))
-                File.Delete(toolBox.TEMP + "temp.mp4");
-            for (int i = 0; i < MAX_CLIPS; i++)
+            if (File.Exists($"{ToolBox.Temp}temp.mp4"))
+                File.Delete($"{ToolBox.Temp}temp.mp4");
+            for (var i = 0; i < _maxClips; i++)
             {
-                if (File.Exists(toolBox.TEMP + "video" + i + ".mp4"))
+                if (File.Exists($"{ToolBox.Temp}video{i}.mp4"))
                 {
-                    Console.WriteLine(i + " Exists");
-                    File.Delete(toolBox.TEMP + "video" + i + ".mp4");
+                    Console.WriteLine($@"{i} Exists");
+                    File.Delete($"{ToolBox.Temp}video{i}.mp4");
                 }
             }
 
         }
-        public void rmDir(string file)
+        public void RmDir(string file)
         {
-            foreach (string fi in Directory.GetFiles(file))
+            foreach (var fi in Directory.GetFiles(file))
             {
                 File.Delete(fi);
             }
